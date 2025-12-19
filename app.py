@@ -189,7 +189,7 @@ ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 st.markdown(f"{numero_circulo(2)} **Preencha os campos do plano**", unsafe_allow_html=True)
 
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
-coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
+coordenador = st.text_input("Coordenador do Curso:", "Pedro Mitsuo Shiroma")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
 semestre_oferecimento = st.text_input("Semestre de Oferecimento:", semestre_sugerido)
 conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=300)
@@ -267,3 +267,4 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
+
