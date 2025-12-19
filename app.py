@@ -1,5 +1,5 @@
 # =========================
-# app.py - Gerador de Planos de Ensino (Somente ODT)
+# app.py - Gerador de Planos de Ensino (ODT + Word)
 # =========================
 
 import streamlit as st
@@ -9,6 +9,7 @@ import os
 import xml.sax.saxutils as saxutils
 from datetime import datetime
 import requests
+import pypandoc
 
 # =========================
 # 1) Textos padrões
@@ -69,29 +70,47 @@ c) Trabalho Prático – 30 pontos.
 """
 
 # =========================
-# 2) Título da página e CSS
+# 2) Configuração da página e CSS
 # =========================
 st.set_page_config(page_title="Gerador de Plano de Ensino")
+
+# Fundo vermelho tijolo e textos claros
 st.markdown(
     """
     <style>
     .main {
-        background-color: #B22222;  /* vermelho tijolo */
+        background-color: #B22222;
         color: white;
+    }
+    h1, h2, h3, h4, h5, h6, .stText {
+        color: white;
+    }
+    .css-1d391kg {  /* Streamlit inputs */
+        background-color: #FFE4E1;
+        color: black;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
+
+# =========================
+# 3) Cabeçalho do CECIA
+# =========================
+st.markdown(
+    "<h2 style='text-align:center'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
+    unsafe_allow_html=True
+)
+
 st.title("📝 Gerador de Plano de Ensino")
 
 # =========================
-# 3) Mensagem de aviso
+# 4) Mensagem de aviso
 # =========================
 st.warning("⚠️ Os textos mostrados abaixo são **exemplos**. Substitua pelo conteúdo que desejar.")
 
 # =========================
-# 4) Seleção de disciplina (modelo ODT)
+# 5) Seleção de disciplina (modelo ODT)
 # =========================
 st.subheader("1️⃣ Selecione a Disciplina")
 
@@ -107,7 +126,7 @@ else:
     disciplina_selecionada = st.selectbox("Disciplina:", disciplinas)
 
 # =========================
-# 5) Cálculo automático de ANO e SEMESTRE
+# 6) Cálculo automático de ANO e SEMESTRE
 # =========================
 hoje = datetime.now()
 ano_atual = hoje.year
@@ -121,7 +140,7 @@ else:
     ano_sugerido = ano_atual + 1
 
 # =========================
-# 6) Campos do plano
+# 7) Campos do plano
 # =========================
 st.subheader("2️⃣ Preencha os campos do plano")
 
@@ -135,7 +154,7 @@ metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, h
 controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=260)
 
 # =========================
-# 7) Funções auxiliares
+# 8) Funções auxiliares
 # =========================
 def transformar_em_paragrafos_justificados(texto):
     texto = saxutils.escape(texto)
@@ -189,9 +208,9 @@ def gerar_odt():
     return novo_odt
 
 # =========================
-# 8) Botão de geração
+# 9) Botão de geração e download
 # =========================
-st.subheader("3️⃣ Gerar ODT")
+st.subheader("3️⃣ Gerar ODT ou Word")
 
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
@@ -202,4 +221,14 @@ if st.button("Gerar ODT"):
             data=f,
             file_name=odt_gerado,
             mime="application/vnd.oasis.opendocument.text"
+        )
+    # Gerar Word (DOCX)
+    docx_gerado = "documento_preenchido.docx"
+    pypandoc.convert_file(odt_gerado, 'docx', outputfile=docx_gerado)
+    with open(docx_gerado, "rb") as f:
+        st.download_button(
+            label="📥 Baixar Word",
+            data=f,
+            file_name=docx_gerado,
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
