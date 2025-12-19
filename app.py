@@ -48,14 +48,14 @@ texto_conteudo_programatico = """1 Nivelamento
 6.3 Filas
 """
 
-texto_controle_avaliacao = """• Cem pontos distribuídos ao longo do semestre da seguinte maneira:
+texto_controle_avaliacao = """• Cem pontos distribuídos ao longo do semestre:
 a) 2 Provas – cada uma valendo 30 pontos – total de 60 pontos;
-b) n listas de exercícios e práticas de laboratório ao longo do período – totalizando 10 pontos;
+b) n listas de exercícios e práticas de laboratório – totalizando 10 pontos;
 c) Trabalho Prático – 30 pontos.
 
-• Prova Substitutiva: o aluno que ficar abaixo da média de 60% ao final do semestre, ou vier a perder alguma aplicação de prova, poderá submeter-se a uma prova de substituição/reposição no valor de 30 pontos. Neste caso, a nota da prova substitutiva substituirá a nota da menor prova realizada pelo aluno, ou irá repor a nota da prova perdida. Essa prova abordará todo o conteúdo da disciplina. Ao final do semestre, o aluno que não atingir 60 pontos totais não será aprovado.
+• Prova Substitutiva: o aluno abaixo da média de 60% ou que perder prova poderá submeter-se a substitutiva de 30 pontos.
 
-• Será feito o controle de presença em todas as aulas por meio de chamadas. Por tratar-se de um curso presencial, o comparecimento do corpo discente às aulas é obrigatório. Em nenhuma hipótese será concedido abono de faltas, exceto nos casos previstos na legislação e no estatuto da universidade. O discente que não comparecer a, no mínimo, 75% das aulas será reprovado por infrequência.
+• Controle de presença obrigatório; mínimo de 75% de comparecimento.
 """
 
 # =========================
@@ -64,7 +64,7 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS simples
+# CSS personalizado
 # =========================
 st.markdown("""
 <style>
@@ -72,49 +72,28 @@ st.markdown("""
 .stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; padding:10px; border-radius:5px;}
 .stTextInput>div>input {background-color: #FFECEC; color: #8B0000; padding:5px; border-radius:5px;}
 .stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
+.numero_caixa {color:#8B0000; font-weight:bold; font-size:18px;}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# Função para criar número em círculo vermelho UFSJ
-# =========================
-def numero_circulo(num):
-    return f"""
-    <span style="
-        display: inline-block;
-        width: 2em;
-        height: 2em;
-        line-height: 2em;
-        border-radius: 50%;
-        background-color: #8B0000; /* vermelho UFSJ */
-        color: white;
-        text-align: center;
-        font-weight: bold;
-        margin-right: 0.3em;
-    ">{num}</span>
-    """
-
-# =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([2, 1])  # 2 partes texto, 1 parte imagem
-
+col1, col2 = st.columns([3, 1])
 with col1:
     st.markdown(
         "<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
         unsafe_allow_html=True
     )
-
 with col2:
-    st.image("cecia.png", width=120)  # imagem à direita
+    st.image("cecia.png", width=120)
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
-# Seção 1️⃣ - Seleção de disciplina
+# Seleção de disciplina
 # =========================
-st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
-
+st.markdown("<span class='numero_caixa'>1️⃣ Selecione a Disciplina</span>", unsafe_allow_html=True)
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
@@ -135,17 +114,32 @@ semestre_sugerido = "2º" if mes_atual < 7 else "1º"
 ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 
 # =========================
-# Seção 2️⃣ - Campos do plano
+# Campos do plano
 # =========================
-st.markdown(f"{numero_circulo(2)} **Preencha os campos do plano**", unsafe_allow_html=True)
+st.markdown("<span class='numero_caixa'>2️⃣ Preencha os campos do plano</span>", unsafe_allow_html=True)
+
+# Função para botões de formatação
+def botoes_formatacao(label, key, altura=200):
+    texto = st.text_area(label, height=altura, key=key)
+    col1, col2, col3 = st.columns([1,1,1])
+    with col1:
+        if st.button("• Bullet", key=f"bullet_{key}"):
+            texto += "\n• "
+    with col2:
+        if st.button("1. Enumerate", key=f"enum_{key}"):
+            texto += "\n1. "
+    with col3:
+        if st.button("**Negrito**", key=f"bold_{key}"):
+            texto += "**Texto**"
+    return texto
 
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
 coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
 semestre_oferecimento = st.text_input("Semestre de Oferecimento:", semestre_sugerido)
-conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=300)
-metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, height=220)
-controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=250)
+conteudo_programatico = botoes_formatacao("Conteúdo Programático:", "conteudo", altura=300)
+metodologia = botoes_formatacao("Metodologia de Ensino:", "metodologia", altura=220)
+controle_avaliacao = botoes_formatacao("Controle de Frequência e Avaliação:", "controle", altura=250)
 
 # =========================
 # Funções auxiliares
@@ -192,7 +186,7 @@ def gerar_odt():
     with open(caminho_xml, "w", encoding="utf-8") as f:
         f.write(xml)
 
-    novo_odt = "documento_preenchido.odt"
+    novo_odt = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
     with zipfile.ZipFile(novo_odt, 'w', zipfile.ZIP_DEFLATED) as zip_out:
         for folder, _, files_ in os.walk(pasta):
             for file in files_:
@@ -202,21 +196,17 @@ def gerar_odt():
     return novo_odt
 
 # =========================
-# Seção 3️⃣ - Gerar ODT
+# Botão gerar ODT
 # =========================
-st.markdown(f"{numero_circulo(3)} **Gerar ODT**", unsafe_allow_html=True)
-
+st.markdown("<span class='numero_caixa'>3️⃣ Gerar ODT</span>", unsafe_allow_html=True)
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
 
-    nome_saida = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
     with open(odt_gerado, "rb") as f:
         st.download_button(
             label="📥 Baixar ODT",
             data=f,
-            file_name=nome_saida,
+            file_name=odt_gerado,
             mime="application/vnd.oasis.opendocument.text"
         )
-
-
