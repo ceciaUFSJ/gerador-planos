@@ -59,24 +59,33 @@ c) Trabalho Prático – 30 pontos.
 """
 
 # =========================
-# Página e CSS moderno/lúdico
+# Configuração da página
 # =========================
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
+# =========================
+# CSS moderno/lúdico
+# =========================
 st.markdown("""
 <style>
-/* Container centralizado e largura limitada */
+/* Container centralizado */
 .main > div.block-container {
     max-width: 60% !important;
     padding-left: 1rem;
     padding-right: 1rem;
 }
 
-/* Fundo branco e textos em vermelho UFSJ */
-body, .stApp {background-color: #FFFFFF; color: #8B0000; font-family: 'Arial', sans-serif;}
-h1, h2, h3, h4, h5, h6 {color: #8B0000; text-align:center;}
+/* Barra superior */
+header {
+    background-color:#8B0000; 
+    color:white;
+    font-size:20px;
+    padding:10px;
+    text-align:center;
+    border-radius:10px;
+}
 
-/* Cards com sombra e bordas arredondadas */
+/* Cards arredondados e sombra */
 .card {
     background-color: #FFF0F0;
     padding: 15px;
@@ -93,22 +102,18 @@ h1, h2, h3, h4, h5, h6 {color: #8B0000; text-align:center;}
 .stButton>button {background-color: #8B0000; color: white; border-radius:15px; padding: 0.6em 1.5em; font-weight:bold; font-size:16px; transition: transform 0.2s; border:none;}
 .stButton>button:hover {transform: scale(1.05); background-color: #B22222; cursor:pointer;}
 
-/* Separadores coloridos */
+/* Separadores */
 hr {border: 1px solid #8B0000; border-radius:5px;}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# Cabeçalho com imagem
+# Cabeçalho com figura e título
 # =========================
-col1, col2 = st.columns([3,1])
-with col1:
-    st.markdown("<h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
-    st.markdown('<div class="card"><h3>📝 Gerador de Plano de Ensino</h3></div>', unsafe_allow_html=True)
-    st.info("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos que desejar!")
-
-with col2:
-    st.image("cecia.png", width=120)
+st.markdown('<header>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</header>', unsafe_allow_html=True)
+st.image("cecia.png", width=120)
+st.markdown('<div class="card"><h3>📝 Gerador de Plano de Ensino</h3></div>', unsafe_allow_html=True)
+st.info("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos que desejar!")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
