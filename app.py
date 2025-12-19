@@ -64,30 +64,55 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS simples
+# CSS personalizado
 # =========================
 st.markdown("""
 <style>
-.main > div.block-container { max-width: 90% !important; }
-.stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; padding:10px; border-radius:5px;}
-.stTextInput>div>input {background-color: #FFECEC; color: #8B0000; padding:5px; border-radius:5px;}
-.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
+/* Texto vermelho UFSJ */
+h2, .stText, .stMarkdown p { color: #8B0000; }
+
+/* Caixas de input/textarea em tons de vermelho UFSJ */
+.stTextArea>div>div>textarea {
+    background-color: #FFD6D6;
+    color: #8B0000;
+    padding:10px;
+    border-radius:5px;
+}
+.stTextInput>div>input {
+    background-color: #FFD6D6;
+    color: #8B0000;
+    padding:5px;
+    border-radius:5px;
+}
+
+/* Botão */
+.stButton>button {
+    background-color: #8B0000;
+    color: white;
+    padding:0.5em 1.2em;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+/* Barra lateral / container max-width */
+.main > div.block-container { max-width: 60% !important; }
+
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([2, 1])  # 4 partes para texto, 1 parte para imagem
+col1, col2 = st.columns([4, 1])
 
 with col1:
     st.markdown(
-        "<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
+        "<h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
         unsafe_allow_html=True
     )
 
 with col2:
-    st.image("cecia.png", width=120)  # imagem do boneco à direita
+    st.image("cecia.png", width=120)
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
@@ -196,8 +221,3 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
-
-
-
-
-
