@@ -21,16 +21,13 @@ texto_conteudo_programatico = """1 Nivelamento
 1.1 Revisão de Algoritmos e Estruturas de Dados I, utilizando C/C++
 1.2 Ponteiros
 1.3 Vetores, Matrizes e Structs
-
 2 Somatórios
 2.1 Notação e manipulação de somas
 2.2 Exemplos computacionais
-
 3 Introdução
 3.1 Noções de complexidade, contagem de operações
 3.2 Pesquisa sequencial, binária e interpolada
 3.3 Algoritmo de ordenação por seleção
-
 4 Tempo de execução de programas
 4.1 Definições
 4.2 Complexidade de tempo x complexidade de espaço
@@ -38,7 +35,6 @@ texto_conteudo_programatico = """1 Nivelamento
 4.4 Comportamento assintótico de um programa
 4.5 Classes de comportamento assintótico
 4.6 Técnicas de análise de algoritmos
-
 5 Ordenação em memória principal
 5.1 Método da bolha
 5.2 Inserção
@@ -46,7 +42,6 @@ texto_conteudo_programatico = """1 Nivelamento
 5.4 Quicksort
 5.6 Mergesort
 5.7 Comparação entre os Métodos
-
 6 Tipos abstratos de dados
 6.1 Listas
 6.2 Pilhas
@@ -69,11 +64,11 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS simples
+# CSS atualizado
 # =========================
 st.markdown("""
 <style>
-.main > div.block-container { max-width: 90% !important; }
+.main > div.block-container { max-width: 60% !important; }
 .stTextArea>div>div>textarea, .stTextInput>div>input {
     background-color: white; 
     color: #8B0000; 
@@ -84,32 +79,11 @@ st.markdown("""
 .numero_caixa {color:#8B0000; font-weight:bold; font-size:18px;}
 </style>
 """, unsafe_allow_html=True)
-True)
-
-
-# =========================
-# Função para criar número em círculo vermelho UFSJ
-# =========================
-def numero_circulo(num):
-    return f"""
-    <span style="
-        display: inline-block;
-        width: 2em;
-        height: 2em;
-        line-height: 2em;
-        border-radius: 50%;
-        background-color: #8B0000; /* vermelho UFSJ */
-        color: white;
-        text-align: center;
-        font-weight: bold;
-        margin-right: 0.3em;
-    ">{num}</span>
-    """
 
 # =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([2, 1])  # 2 partes texto, 1 parte imagem
+col1, col2 = st.columns([3, 1])
 
 with col1:
     st.markdown(
@@ -118,15 +92,14 @@ with col1:
     )
 
 with col2:
-    st.image("cecia.png", width=120)  # imagem à direita
+    st.image("cecia.png", width=120)
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
-# Seção 1️⃣ - Seleção de disciplina
+# Seleção de disciplina
 # =========================
-st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
-
+st.subheader("1️⃣ Selecione a Disciplina")
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
@@ -147,10 +120,9 @@ semestre_sugerido = "2º" if mes_atual < 7 else "1º"
 ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 
 # =========================
-# Seção 2️⃣ - Campos do plano
+# Campos do plano
 # =========================
-st.markdown(f"{numero_circulo(2)} **Preencha os campos do plano**", unsafe_allow_html=True)
-
+st.subheader("2️⃣ Preencha os campos do plano")
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
 coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
@@ -214,10 +186,9 @@ def gerar_odt():
     return novo_odt
 
 # =========================
-# Seção 3️⃣ - Gerar ODT
+# Botão gerar ODT
 # =========================
-st.markdown(f"{numero_circulo(3)} **Gerar ODT**", unsafe_allow_html=True)
-
+st.subheader("3️⃣ Gerar ODT")
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
@@ -230,6 +201,3 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
-
-
-
