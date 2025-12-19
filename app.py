@@ -1,5 +1,5 @@
 # =========================
-# app.py - Gerador de Planos de Ensino (ODT + Word)
+# app.py - Gerador de Planos de Ensino (ODT)
 # =========================
 
 import streamlit as st
@@ -9,7 +9,6 @@ import os
 import xml.sax.saxutils as saxutils
 from datetime import datetime
 import requests
-import pypandoc
 
 # =========================
 # 1) Textos padrões
@@ -78,16 +77,20 @@ st.set_page_config(page_title="Gerador de Plano de Ensino")
 st.markdown(
     """
     <style>
-    .main {
+    .css-18e3th9 {  /* área principal do Streamlit */
         background-color: #B22222;
         color: white;
     }
-    h1, h2, h3, h4, h5, h6, .stText {
+    .stButton>button {
+        background-color: #FF6347;
         color: white;
     }
-    .css-1d391kg {  /* Streamlit inputs */
+    .css-1d391kg, .css-1emrehy {  /* inputs */
         background-color: #FFE4E1;
         color: black;
+    }
+    h1, h2, h3, h4, h5, h6, .stText {
+        color: white;
     }
     </style>
     """,
@@ -107,7 +110,7 @@ st.title("📝 Gerador de Plano de Ensino")
 # =========================
 # 4) Mensagem de aviso
 # =========================
-st.warning("⚠️ Os textos mostrados abaixo são **exemplos**. Substitua pelo conteúdo que desejar.")
+st.warning("⚠️ Os textos mostrados abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
 # 5) Seleção de disciplina (modelo ODT)
@@ -210,9 +213,9 @@ def gerar_odt():
 # =========================
 # 9) Botão de geração e download
 # =========================
-st.subheader("3️⃣ Gerar ODT ou Word")
+st.subheader("3️⃣ Gerar ODT")
 
-if st.button("Gerar Arquivo"):
+if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
     with open(odt_gerado, "rb") as f:
@@ -222,14 +225,3 @@ if st.button("Gerar Arquivo"):
             file_name=odt_gerado,
             mime="application/vnd.oasis.opendocument.text"
         )
-    # Gerar Word (DOCX)
-    docx_gerado = "documento_preenchido.docx"
-    pypandoc.convert_file(odt_gerado, 'docx', outputfile=docx_gerado)
-    with open(docx_gerado, "rb") as f:
-        st.download_button(
-            label="📥 Baixar Word",
-            data=f,
-            file_name=docx_gerado,
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
-
