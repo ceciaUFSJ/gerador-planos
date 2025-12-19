@@ -78,7 +78,7 @@ st.markdown("""
 # =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([4, 1])  # 4 partes para texto, 1 parte para imagem
+col1, col2 = st.columns([3, 1])  # 4 partes para texto, 1 parte para imagem
 
 with col1:
     st.markdown(
@@ -87,7 +87,7 @@ with col1:
     )
 
 with col2:
-    st.image("cecia.png", width=20)  # imagem do boneco à direita
+    st.image("cecia.png", width=120)  # imagem do boneco à direita
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
