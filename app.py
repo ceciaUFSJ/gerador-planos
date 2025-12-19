@@ -2,7 +2,7 @@ import streamlit as st
 import zipfile
 import shutil
 import os
-import xml..sax.saxutils as saxutils
+import xml.sax.saxutils as saxutils
 from datetime import datetime
 import requests
 import time
@@ -83,7 +83,6 @@ c) Trabalho Prático – 30 pontos.
 
 # =========================
 # Configuração da página
-# =========================
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
@@ -199,6 +198,66 @@ def transformar_em_paragrafos_justificados(texto):
     texto = saxutils.escape(texto)
     return "</text:p><text:p text:style-name=\"Justificado\">".join(texto.split("\n"))
 
-def
+def gerar_odt():
+    git_url_raw = f"https://raw.githubusercontent.com/ceciaUFSJ/planos-ensino/main/modelos/{disciplina_selecionada}"
+    r = requests.get(git_url_raw)
+    with open("PLANO_BASE.odt", "wb") as f:
+        f.write(r.content)
 
+    pasta = "odt_temp"
+    if os.path.exists(pasta):
+        shutil.rmtree(pasta)
+    os.mkdir(pasta)
 
+    with zipfile.ZipFile("PLANO_BASE.odt", 'r') as zip_ref:
+        zip_ref.extractall(pasta)
+
+    caminho_xml = os.path.join(pasta, "content.xml")
+    with open(caminho_xml, "r", encoding="utf-8") as f:
+        xml = f.read()
+
+    if "style:name=\"Justificado\"" not in xml:
+        estilo = """
+        <style:style style:name="Justificado" style:family="paragraph">
+            <style:paragraph-properties fo:text-align="justify"/>
+            <style:text-properties fo:font-size="10pt"/>
+        </style:style>
+        """
+        xml = xml.replace("</office:automatic-styles>", estilo + "\n</office:automatic-styles>")
+
+    xml = xml.replace("drrrr", saxutils.escape(docente))
+    xml = xml.replace("dcccc", saxutils.escape(coordenador))
+    xml = xml.replace("ANOof", saxutils.escape(ano_oferecimento))
+    xml = xml.replace("SEof", saxutils.escape(semestre_oferecimento))
+    xml = xml.replace("cccc", transformar_em_paragrafos_justificados(conteudo_programatico))
+    xml = xml.replace("mmmm", transformar_em_paragrafos_justificados(metodologia))
+    xml = xml.replace("ffff", transformar_em_paragrafos_justificados(controle_avaliacao))
+
+    with open(caminho_xml, "w", encoding="utf-8") as f:
+        f.write(xml)
+
+    novo_odt = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ','_')}.odt"
+    with zipfile.ZipFile(novo_odt, 'w', zipfile.ZIP_DEFLATED) as zip_out:
+        for folder, _, files_ in os.walk(pasta):
+            for file in files_:
+                full = os.path.join(folder, file)
+                zip_out.write(full, os.path.relpath(full, pasta))
+
+    return novo_odt
+
+# =========================
+# Seção 3️⃣ - Gerar ODT
+st.markdown(f"{numero_circulo(3)} **Gerar ODT**", unsafe_allow_html=True)
+
+if st.button("Gerar ODT"):
+    odt_gerado = gerar_odt()
+    st.success("✅ ODT gerado com sucesso!")
+
+    nome_saida = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
+    with open(odt_gerado, "rb") as f:
+        st.download_button(
+            label="📥 Baixar ODT",
+            data=f,
+            file_name=nome_saida,
+            mime="application/vnd.oasis.opendocument.text"
+        )
