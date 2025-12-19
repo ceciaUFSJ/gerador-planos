@@ -70,39 +70,13 @@ st.set_page_config(page_title="CECIA - Gerador de Planos de Ensino", layout="wid
 
 st.markdown("""
 <style>
-/* Fundo vermelho suave */
-body, .stApp {background-color: #F2C2B0; color: #333333; font-family: 'Arial', sans-serif;}
-
-/* Cabeçalho */
-h1, h2, h3, h4, h5, h6 {color: #B22222;}
-
-/* Textareas */
-.stTextArea>div>div>textarea {
-    background-color: #FFF5F0; 
-    color: #000; 
-    border-radius:10px; 
-    padding:10px;
-}
-
-/* Botões */
-.stButton>button {
-    background-color: #CD5C5C;
-    color: white;
-    border-radius:10px;
-    padding: 0.5em 1.2em;
-    font-weight:bold;
-    transition: transform 0.2s;
-    border:none;
-}
-.stButton>button:hover {
-    transform: scale(1.05);
-    background-color: #B22222;
-}
-
-/* Aviso */
-.stWarning {background-color:#FFE4E1; color:#333; border-radius:8px; padding:10px;}
-
-/* Containers */
+body, .stApp {background-color: #8B0000; color: #FFFFFF; font-family: 'Arial', sans-serif;}
+h1, h2, h3, h4, h5, h6 {color: #ADD8E6; text-align:center;}
+.stTextArea>div>div>textarea {background-color: #B22222; color: #FFFFFF; border-radius:10px; padding:10px;}
+.stTextInput>div>input {background-color: #B22222; color: #FFFFFF; border-radius:8px; padding:5px; border:none;}
+.stButton>button {background-color: #CD5C5C; color: white; border-radius:10px; padding: 0.5em 1.2em; font-weight:bold; transition: transform 0.2s; border:none;}
+.stButton>button:hover {transform: scale(1.05); background-color: #B22222;}
+.stWarning {background-color:#FF6347; color:#FFFFFF; border-radius:8px; padding:10px;}
 .stContainer {padding: 1rem; border-radius:10px;}
 </style>
 """, unsafe_allow_html=True)
@@ -110,10 +84,7 @@ h1, h2, h3, h4, h5, h6 {color: #B22222;}
 # =========================
 # Cabeçalho
 # =========================
-st.markdown(
-    "<h2 style='text-align:center'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
-    unsafe_allow_html=True
-)
+st.markdown("<h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
 st.title("📝 Gerador de Plano de Ensino")
 st.warning("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos desejados.")
 
@@ -220,7 +191,6 @@ if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
 
-    # Nome do arquivo: disciplina + docente
     nome_saida = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
 
     with open(odt_gerado, "rb") as f:
