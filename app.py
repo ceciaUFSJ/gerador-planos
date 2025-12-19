@@ -134,7 +134,7 @@ def gerar_odt_preenchido():
     if "style:name=\"Justificado\"" not in xml:
         estilo = """
         <style:style style:name="Justificado" style:family="paragraph">
-            <style:paragraph-properties fo:text-align="justify" fo:font-size="10pt"/>
+            <style:paragraph-properties fo:text-align="justify" fo:font-size="9pt"/>
         </style:style>
         """
         xml = xml.replace("</office:automatic-styles>", estilo + "\n</office:automatic-styles>")
@@ -177,5 +177,6 @@ if st.button("Gerar ODT/PDF"):
 
     if pdf_gerado and os.path.exists("documento_preenchido.pdf"):
         st.download_button("Baixar PDF", open("documento_preenchido.pdf", "rb").read(), file_name="documento_preenchido.pdf")
+
 
 
