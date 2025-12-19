@@ -64,58 +64,24 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS moderno/lúdico
+# CSS simples
 # =========================
 st.markdown("""
 <style>
-/* Container centralizado */
-.main > div.block-container {
-    max-width: 60% !important;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-/* Barra superior */
-header {
-    background-color:#8B0000; 
-    color:white;
-    font-size:20px;
-    padding:10px;
-    text-align:center;
-    border-radius:10px;
-}
-
-/* Cards arredondados e sombra */
-.card {
-    background-color: #FFF0F0;
-    padding: 15px;
-    border-radius: 15px;
-    box-shadow: 2px 2px 10px rgba(139,0,0,0.2);
-    margin-bottom: 20px;
-}
-
-/* Inputs */
-.stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; border-radius:10px; padding:10px;}
-.stTextInput>div>input {background-color: #FFECEC; color: #8B0000; border-radius:8px; padding:5px; border:none;}
-
-/* Botões lúdicos */
-.stButton>button {background-color: #8B0000; color: white; border-radius:15px; padding: 0.6em 1.5em; font-weight:bold; font-size:16px; transition: transform 0.2s; border:none;}
-.stButton>button:hover {transform: scale(1.05); background-color: #B22222; cursor:pointer;}
-
-/* Separadores */
-hr {border: 1px solid #8B0000; border-radius:5px;}
+.main > div.block-container { max-width: 90% !important; }
+.stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; padding:10px; border-radius:5px;}
+.stTextInput>div>input {background-color: #FFECEC; color: #8B0000; padding:5px; border-radius:5px;}
+.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# Cabeçalho com figura e título
+# Cabeçalho
 # =========================
-st.markdown('<header>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</header>', unsafe_allow_html=True)
 st.image("cecia.png", width=120)
-st.markdown('<div class="card"><h3>📝 Gerador de Plano de Ensino</h3></div>', unsafe_allow_html=True)
-st.info("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos que desejar!")
-
-st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
+st.markdown("### 📝 Gerador de Plano de Ensino")
+st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
 # Seleção de disciplina
@@ -131,8 +97,6 @@ if not disciplinas:
 else:
     disciplina_selecionada = st.selectbox("Disciplina:", disciplinas)
 
-st.markdown("<hr>", unsafe_allow_html=True)
-
 # =========================
 # Ano e semestre
 # =========================
@@ -146,21 +110,13 @@ ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 # Campos do plano
 # =========================
 st.subheader("2️⃣ Preencha os campos do plano")
-with st.container():
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
-    coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
-    ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
-    semestre_oferecimento = st.text_input("Semestre de Oferecimento:", semestre_sugerido)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=300)
-    metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, height=220)
-    controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=250)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-st.markdown("<hr>", unsafe_allow_html=True)
+docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
+coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
+ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
+semestre_oferecimento = st.text_input("Semestre de Oferecimento:", semestre_sugerido)
+conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=300)
+metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, height=220)
+controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=250)
 
 # =========================
 # Funções auxiliares
