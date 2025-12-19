@@ -59,59 +59,74 @@ c) Trabalho Prático – 30 pontos.
 """
 
 # =========================
-# Página e CSS
+# Página e CSS moderno/lúdico
 # =========================
-st.set_page_config(page_title="CECIA - Gerador de Planos de Ensino", layout="wide")
+st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 st.markdown("""
 <style>
-/* Centralizar conteúdo e limitar largura a 60% */
+/* Container centralizado e largura limitada */
 .main > div.block-container {
     max-width: 60% !important;
     padding-left: 1rem;
     padding-right: 1rem;
 }
 
-/* Cores e fontes */
+/* Fundo branco e textos em vermelho UFSJ */
 body, .stApp {background-color: #FFFFFF; color: #8B0000; font-family: 'Arial', sans-serif;}
 h1, h2, h3, h4, h5, h6 {color: #8B0000; text-align:center;}
+
+/* Cards com sombra e bordas arredondadas */
+.card {
+    background-color: #FFF0F0;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 2px 2px 10px rgba(139,0,0,0.2);
+    margin-bottom: 20px;
+}
+
+/* Inputs */
 .stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; border-radius:10px; padding:10px;}
 .stTextInput>div>input {background-color: #FFECEC; color: #8B0000; border-radius:8px; padding:5px; border:none;}
-.stButton>button {background-color: #8B0000; color: white; border-radius:10px; padding: 0.5em 1.2em; font-weight:bold; transition: transform 0.2s; border:none;}
-.stButton>button:hover {transform: scale(1.05); background-color: #B22222;}
-.stWarning {background-color:#FF6347; color:#FFFFFF; border-radius:8px; padding:10px;}
-.stContainer {padding: 1rem; border-radius:10px;}
+
+/* Botões lúdicos */
+.stButton>button {background-color: #8B0000; color: white; border-radius:15px; padding: 0.6em 1.5em; font-weight:bold; font-size:16px; transition: transform 0.2s; border:none;}
+.stButton>button:hover {transform: scale(1.05); background-color: #B22222; cursor:pointer;}
+
+/* Separadores coloridos */
+hr {border: 1px solid #8B0000; border-radius:5px;}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
 # Cabeçalho com imagem
 # =========================
-col1, col2 = st.columns([3,1])  # 60% para texto, 40% para imagem
-
+col1, col2 = st.columns([3,1])
 with col1:
     st.markdown("<h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
-    st.title("📝 Gerador de Plano de Ensino")
-    st.warning("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos desejados.")
+    st.markdown('<div class="card"><h3>📝 Gerador de Plano de Ensino</h3></div>', unsafe_allow_html=True)
+    st.info("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos que desejar!")
 
 with col2:
-    st.image("cecia.png", width=150)
+    st.image("cecia.png", width=120)
+
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # =========================
 # Seleção de disciplina
 # =========================
 st.subheader("1️⃣ Selecione a Disciplina")
-
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
-
 disciplinas = [f['name'] for f in arquivos_json if f['name'].lower().endswith('.odt')]
 
 if not disciplinas:
     st.error("❌ Nenhum modelo de disciplina (ODT) encontrado.")
 else:
     disciplina_selecionada = st.selectbox("Disciplina:", disciplinas)
+
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # =========================
 # Ano e semestre
@@ -125,17 +140,22 @@ ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 # =========================
 # Campos do plano
 # =========================
+st.subheader("2️⃣ Preencha os campos do plano")
 with st.container():
-    st.subheader("2️⃣ Preencha os campos do plano")
-
+    st.markdown('<div class="card">', unsafe_allow_html=True)
     docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
     coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
     ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
     semestre_oferecimento = st.text_input("Semestre de Oferecimento:", semestre_sugerido)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=330)
-    metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, height=240)
-    controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=260)
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=300)
+    metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, height=220)
+    controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=250)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # =========================
 # Funções auxiliares
@@ -195,13 +215,11 @@ def gerar_odt():
 # Botão gerar ODT
 # =========================
 st.subheader("3️⃣ Gerar ODT")
-
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
 
     nome_saida = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
-
     with open(odt_gerado, "rb") as f:
         st.download_button(
             label="📥 Baixar ODT",
