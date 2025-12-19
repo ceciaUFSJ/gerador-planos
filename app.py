@@ -7,7 +7,7 @@ from datetime import datetime
 import requests
 
 # =========================
-# Textos padrão
+# Textos padrão completos
 # =========================
 texto_metodologia_padrao = """• Aulas expositivas com apresentação de conteúdo, discussão de problemas e aplicações;
 • Aprendizagem por meio de solução de problemas;
@@ -19,16 +19,48 @@ texto_metodologia_padrao = """• Aulas expositivas com apresentação de conte�
 
 texto_conteudo_programatico = """1 Nivelamento
 1.1 Revisão de Algoritmos e Estruturas de Dados I, utilizando C/C++
-1.2 Ponteiros
+1.2 Ponteiros: declaração, inicialização, alocação e desalocação
 1.3 Vetores, Matrizes e Structs
-...
+
+2 Somatórios
+2.1 Notação e manipulação de somas
+2.2 Exemplos computacionais
+
+3 Introdução
+3.1 Noções de complexidade, contagem de operações
+3.2 Pesquisa sequencial, binária e interpolada
+3.3 Algoritmo de ordenação por seleção
+
+4 Tempo de execução de programas
+4.1 Definições
+4.2 Complexidade de tempo x complexidade de espaço
+4.3 Função de complexidade
+4.4 Comportamento assintótico de um programa
+4.5 Classes de comportamento assintótico
+4.6 Técnicas de análise de algoritmos
+
+5 Ordenação em memória principal
+5.1 Método da bolha
+5.2 Inserção
+5.3 Seleção
+5.4 Quicksort
+5.6 Mergesort
+5.7 Comparação entre os Métodos
+
+6 Tipos abstratos de dados
+6.1 Listas
+6.2 Pilhas
+6.3 Filas
 """
 
-texto_controle_avaliacao = """• Cem pontos distribuídos ao longo do semestre:
-a) 2 Provas – 30 pontos cada;
-b) Listas de exercícios e práticas – 10 pontos;
+texto_controle_avaliacao = """• Cem pontos distribuídos ao longo do semestre da seguinte maneira:
+a) 2 Provas – cada uma valendo 30 pontos – total de 60 pontos;
+b) n listas de exercícios e práticas de laboratório ao longo do período – totalizando 10 pontos;
 c) Trabalho Prático – 30 pontos.
-...
+
+• Prova Substitutiva: o aluno que ficar abaixo da média de 60% ao final do semestre, ou vier a perder alguma aplicação de prova, poderá submeter-se a uma prova de substituição/reposição no valor de 30 pontos. Neste caso, a nota da prova substitutiva substituirá a nota da menor prova realizada pelo aluno, ou irá repor a nota da prova perdida. Essa prova abordará todo o conteúdo da disciplina. Ao final do semestre, o aluno que não atingir 60 pontos totais não será aprovado.
+
+• Será feito o controle de presença em todas as aulas por meio de chamadas. Por tratar-se de um curso presencial, o comparecimento do corpo discente às aulas é obrigatório. Em nenhuma hipótese será concedido abono de faltas, exceto nos casos previstos na legislação e no estatuto da universidade. O discente que não comparecer a, no mínimo, 75% das aulas será reprovado por infrequência.
 """
 
 # =========================
@@ -36,41 +68,44 @@ c) Trabalho Prático – 30 pontos.
 # =========================
 st.set_page_config(page_title="CECIA - Gerador de Planos de Ensino", layout="wide")
 
-st.markdown(
-    """
-    <style>
-    /* Fundo e cores */
-    body, .css-18e3th9 {background-color: #8B0000; color: #FFF8F0;}
-    .stApp {background-color: #8B0000;}
-    
-    /* Cabeçalho */
-    h1, h2, h3, h4, h5, h6 {color: #FFDAB9;}
-    
-    /* Textareas */
-    .stTextArea>div>div>textarea {background-color: #FFF5F0; color: #000; border-radius:8px;}
-    
-    /* Botões */
-    .stButton>button {
-        background-color: #FF6347;
-        color: white;
-        border-radius:8px;
-        padding: 0.5em 1em;
-        font-weight:bold;
-        transition: transform 0.2s;
-    }
-    .stButton>button:hover {
-        transform: scale(1.05);
-        background-color: #FF4500;
-    }
-    
-    /* Avisos */
-    .stWarning {background-color:#FFA07A; color:black;}
-    
-    /* Containers */
-    .stContainer {padding: 1rem; border-radius:10px;}
-    </style>
-    """, unsafe_allow_html=True
-)
+st.markdown("""
+<style>
+/* Fundo vermelho suave */
+body, .stApp {background-color: #F2C2B0; color: #333333; font-family: 'Arial', sans-serif;}
+
+/* Cabeçalho */
+h1, h2, h3, h4, h5, h6 {color: #B22222;}
+
+/* Textareas */
+.stTextArea>div>div>textarea {
+    background-color: #FFF5F0; 
+    color: #000; 
+    border-radius:10px; 
+    padding:10px;
+}
+
+/* Botões */
+.stButton>button {
+    background-color: #CD5C5C;
+    color: white;
+    border-radius:10px;
+    padding: 0.5em 1.2em;
+    font-weight:bold;
+    transition: transform 0.2s;
+    border:none;
+}
+.stButton>button:hover {
+    transform: scale(1.05);
+    background-color: #B22222;
+}
+
+/* Aviso */
+.stWarning {background-color:#FFE4E1; color:#333; border-radius:8px; padding:10px;}
+
+/* Containers */
+.stContainer {padding: 1rem; border-radius:10px;}
+</style>
+""", unsafe_allow_html=True)
 
 # =========================
 # Cabeçalho
@@ -79,9 +114,7 @@ st.markdown(
     "<h2 style='text-align:center'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
     unsafe_allow_html=True
 )
-
 st.title("📝 Gerador de Plano de Ensino")
-
 st.warning("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos desejados.")
 
 # =========================
@@ -187,7 +220,7 @@ if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
 
-    # Novo nome: disciplina + docente
+    # Nome do arquivo: disciplina + docente
     nome_saida = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
 
     with open(odt_gerado, "rb") as f:
