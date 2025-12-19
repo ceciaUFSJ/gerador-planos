@@ -69,21 +69,36 @@ st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 st.markdown("""
 <style>
 .main > div.block-container { max-width: 60% !important; }
-.stTextArea>div>div>textarea, .stTextInput>div>input {
-    background-color: white; 
-    color: #8B0000; 
-    padding: 10px; 
-    border-radius: 5px;
+
+/* Estilo para text_area e text_input */
+.stTextArea>div>div>textarea, 
+.stTextInput>div>input {
+    background-color: white;      /* fundo branco */
+    color: #8B0000;               /* texto vermelho UFSJ */
+    padding: 10px;                /* espaçamento interno */
+    border-radius: 5px;           /* cantos arredondados */
+    border: 1px solid #8B0000;   /* borda vermelha opcional */
 }
-.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
+
+/* Botões */
+.stButton>button {
+    background-color: #8B0000; 
+    color: white; 
+    padding:0.5em 1.2em; 
+    border-radius:8px; 
+    font-weight:bold;
+}
+
+/* Números circulados */
 .numero_caixa {color:#8B0000; font-weight:bold; font-size:18px;}
 </style>
 """, unsafe_allow_html=True)
 
+
 # =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([3, 1])
+col1, col2 = st.columns([2, 1])
 
 with col1:
     st.markdown(
@@ -201,3 +216,4 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
+
