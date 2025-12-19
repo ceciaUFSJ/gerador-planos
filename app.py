@@ -2,9 +2,10 @@ import streamlit as st
 import zipfile
 import shutil
 import os
-import xml.sax.saxutils as saxutils
+import xml..sax.saxutils as saxutils
 from datetime import datetime
 import requests
+import time
 
 # =========================
 # Função para criar número em círculo vermelho UFSJ
@@ -26,7 +27,6 @@ def numero_circulo(num):
 
 # =========================
 # Textos padrão completos
-# =========================
 texto_metodologia_padrao = """• Aulas expositivas com apresentação de conteúdo, discussão de problemas e aplicações;
 • Aprendizagem por meio de solução de problemas;
 • Desenvolvimento de algoritmos de forma dinâmica durante as aulas;
@@ -88,7 +88,6 @@ st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
 # CSS atualizado
-# =========================
 st.markdown("""
 <style>
 .main > div.block-container { max-width: 90% !important; margin:auto;}
@@ -145,7 +144,6 @@ st.markdown("""
 
 # =========================
 # Cabeçalho com título + imagem
-# =========================
 col1, col2 = st.columns([2, 1])  # 2 partes texto, 1 parte imagem
 
 with col1:
@@ -161,10 +159,11 @@ st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que des
 
 # =========================
 # Seção 1️⃣ - Seleção de disciplina
-# =========================
 st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
 
-api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
+# Adicionando um timestamp para evitar cache
+timestamp = int(time.time())
+api_url = f"https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos?ts={timestamp}"
 r = requests.get(api_url)
 arquivos_json = r.json()
 disciplinas = [f['name'] for f in arquivos_json if f['name'].lower().endswith('.odt')]
@@ -176,7 +175,6 @@ else:
 
 # =========================
 # Ano e semestre
-# =========================
 hoje = datetime.now()
 ano_atual = hoje.year
 mes_atual = hoje.month
@@ -185,7 +183,6 @@ ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 
 # =========================
 # Seção 2️⃣ - Campos do plano
-# =========================
 st.markdown(f"{numero_circulo(2)} **Preencha os campos do plano**", unsafe_allow_html=True)
 
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
@@ -198,73 +195,8 @@ controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", text
 
 # =========================
 # Funções auxiliares
-# =========================
 def transformar_em_paragrafos_justificados(texto):
     texto = saxutils.escape(texto)
     return "</text:p><text:p text:style-name=\"Justificado\">".join(texto.split("\n"))
 
-def gerar_odt():
-    git_url_raw = f"https://raw.githubusercontent.com/ceciaUFSJ/planos-ensino/main/modelos/{disciplina_selecionada}"
-    r = requests.get(git_url_raw)
-    with open("PLANO_BASE.odt", "wb") as f:
-        f.write(r.content)
-
-    pasta = "odt_temp"
-    if os.path.exists(pasta):
-        shutil.rmtree(pasta)
-    os.mkdir(pasta)
-
-    with zipfile.ZipFile("PLANO_BASE.odt", 'r') as zip_ref:
-        zip_ref.extractall(pasta)
-
-    caminho_xml = os.path.join(pasta, "content.xml")
-    with open(caminho_xml, "r", encoding="utf-8") as f:
-        xml = f.read()
-
-    if "style:name=\"Justificado\"" not in xml:
-        estilo = """
-        <style:style style:name="Justificado" style:family="paragraph">
-            <style:paragraph-properties fo:text-align="justify"/>
-            <style:text-properties fo:font-size="10pt"/>
-        </style:style>
-        """
-        xml = xml.replace("</office:automatic-styles>", estilo + "\n</office:automatic-styles>")
-
-    xml = xml.replace("drrrr", saxutils.escape(docente))
-    xml = xml.replace("dcccc", saxutils.escape(coordenador))
-    xml = xml.replace("ANOof", saxutils.escape(ano_oferecimento))
-    xml = xml.replace("SEof", saxutils.escape(semestre_oferecimento))
-    xml = xml.replace("cccc", transformar_em_paragrafos_justificados(conteudo_programatico))
-    xml = xml.replace("mmmm", transformar_em_paragrafos_justificados(metodologia))
-    xml = xml.replace("ffff", transformar_em_paragrafos_justificados(controle_avaliacao))
-
-    with open(caminho_xml, "w", encoding="utf-8") as f:
-        f.write(xml)
-
-    novo_odt = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ','_')}.odt"
-    with zipfile.ZipFile(novo_odt, 'w', zipfile.ZIP_DEFLATED) as zip_out:
-        for folder, _, files_ in os.walk(pasta):
-            for file in files_:
-                full = os.path.join(folder, file)
-                zip_out.write(full, os.path.relpath(full, pasta))
-
-    return novo_odt
-
-# =========================
-# Seção 3️⃣ - Gerar ODT
-# =========================
-st.markdown(f"{numero_circulo(3)} **Gerar ODT**", unsafe_allow_html=True)
-
-if st.button("Gerar ODT"):
-    odt_gerado = gerar_odt()
-    st.success("✅ ODT gerado com sucesso!")
-
-    nome_saida = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
-    with open(odt_gerado, "rb") as f:
-        st.download_button(
-            label="📥 Baixar ODT",
-            data=f,
-            file_name=nome_saida,
-            mime="application/vnd.oasis.opendocument.text"
-        )
-
+def
