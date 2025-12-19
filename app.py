@@ -7,7 +7,7 @@ from datetime import datetime
 import requests
 
 # =========================
-# Textos padrão completos
+# Textos padrão
 # =========================
 texto_metodologia_padrao = """• Aulas expositivas com apresentação de conteúdo, discussão de problemas e aplicações;
 • Aprendizagem por meio de solução de problemas;
@@ -64,14 +64,14 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS personalizado
+# CSS Vermelho UFSJ
 # =========================
 st.markdown("""
 <style>
-/* Texto vermelho UFSJ */
+/* Texto em vermelho UFSJ */
 h2, .stText, .stMarkdown p { color: #8B0000; }
 
-/* Caixas de input/textarea em tons de vermelho UFSJ */
+/* Caixas de input/textarea em tons suaves de vermelho UFSJ */
 .stTextArea>div>div>textarea {
     background-color: #FFD6D6;
     color: #8B0000;
@@ -85,7 +85,7 @@ h2, .stText, .stMarkdown p { color: #8B0000; }
     border-radius:5px;
 }
 
-/* Botão */
+/* Botões em vermelho UFSJ */
 .stButton>button {
     background-color: #8B0000;
     color: white;
@@ -94,9 +94,8 @@ h2, .stText, .stMarkdown p { color: #8B0000; }
     font-weight:bold;
 }
 
-/* Barra lateral / container max-width */
+/* Container máximo 60% da tela */
 .main > div.block-container { max-width: 60% !important; }
-
 </style>
 """, unsafe_allow_html=True)
 
