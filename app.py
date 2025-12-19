@@ -64,77 +64,47 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS
+# CSS atualizado
 # =========================
 st.markdown("""
 <style>
 .main > div.block-container { max-width: 60% !important; }
-
-/* Barra de cabeçalho */
-.header-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #FFECEC;  /* vermelho tijolo claro */
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-.header-bar img {
-    margin-left: 15px;
-    height: 60px;
-}
-.header-bar h2 {
-    color: #8B0000; /* vermelho UFSJ */
-    margin: 0;
-    font-size: 22px;
-    text-align: center;
-}
-
-/* Estilo para text_area e text_input */
-.stTextArea>div>div>textarea, 
-.stTextInput>div>input {
-    background-color: white;
-    color: #8B0000;
-    padding: 10px;
+.stTextArea>div>div>textarea, .stTextInput>div>input {
+    background-color: white; 
+    color: #8B0000; 
+    padding: 10px; 
     border-radius: 5px;
-    border: 1px solid #8B0000;
 }
-
-/* Botões */
-.stButton>button {
-    background-color: #8B0000; 
-    color: white; 
-    padding:0.5em 1.2em; 
-    border-radius:8px; 
-    font-weight:bold;
-}
-
-/* Números circulados */
+.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
 .numero_caixa {color:#8B0000; font-weight:bold; font-size:18px;}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# Cabeçalho com barra centralizada
+# Cabeçalho com título + imagem à direita
 # =========================
-st.markdown("""
-<div class="header-bar">
-    <h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>
-    <img src="cecia.png">
-</div>
-""", unsafe_allow_html=True)
+col1, col2 = st.columns([3, 1])
+
+with col1:
+    st.markdown(
+        "<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
+        unsafe_allow_html=True
+    )
+
+with col2:
+    st.image("cecia.png", width=120)
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
-# 1️⃣ Seleção de disciplina
+# Seleção de disciplina
 # =========================
-st.markdown('<span class="numero_caixa">1️⃣</span> Selecione a Disciplina', unsafe_allow_html=True)
+st.subheader("1️⃣ Selecione a Disciplina")
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
 disciplinas = [f['name'] for f in arquivos_json if f['name'].lower().endswith('.odt')]
+
 if not disciplinas:
     st.error("❌ Nenhum modelo de disciplina (ODT) encontrado.")
 else:
@@ -150,9 +120,9 @@ semestre_sugerido = "2º" if mes_atual < 7 else "1º"
 ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 
 # =========================
-# 2️⃣ Campos do plano
+# Campos do plano
 # =========================
-st.markdown('<span class="numero_caixa">2️⃣</span> Preencha os campos do plano', unsafe_allow_html=True)
+st.subheader("2️⃣ Preencha os campos do plano")
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
 coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
@@ -216,9 +186,9 @@ def gerar_odt():
     return novo_odt
 
 # =========================
-# 3️⃣ Botão gerar ODT
+# Botão gerar ODT
 # =========================
-st.markdown('<span class="numero_caixa">3️⃣</span> Gerar ODT', unsafe_allow_html=True)
+st.subheader("3️⃣ Gerar ODT")
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
