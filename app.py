@@ -96,7 +96,7 @@ else:
 # Campos de entrada
 # =========================
 docente = st.text_input("DOCENTE RESPONSÁVEL:", "João A. B. Cardoso")
-coordenador = st.text_input("COORDENADOR DO CURSO:", "Mario C. D. Silva")
+coordenador = st.text_input("COORDENADOR DO CURSO:", "Pedro")
 ano_oferta = st.text_input("ANO DE OFERECIMENTO:", str(ano_sugerido))
 semestre_oferta = st.text_input("SEMESTRE DE OFERECIMENTO:", semestre_sugerido)
 
@@ -177,3 +177,4 @@ if st.button("Gerar ODT/PDF"):
 
     if pdf_gerado and os.path.exists("documento_preenchido.pdf"):
         st.download_button("Baixar PDF", open("documento_preenchido.pdf", "rb").read(), file_name="documento_preenchido.pdf")
+
