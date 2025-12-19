@@ -64,34 +64,21 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS para estilo uniforme
+# CSS simples
 # =========================
 st.markdown("""
 <style>
 .main > div.block-container { max-width: 90% !important; }
-
-.stTextArea>div>div>textarea, 
-.stTextInput>div>input { 
-    background-color: #FFECEC;  /* fundo salmão claro */
-    color: #8B0000;             /* vermelho UFSJ */
-    padding:10px; 
-    border-radius:5px;
-}
-
-.stButton>button { 
-    background-color: #8B0000; 
-    color: white; 
-    padding:0.5em 1.2em; 
-    border-radius:8px; 
-    font-weight:bold;
-}
+.stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; padding:10px; border-radius:5px;}
+.stTextInput>div>input {background-color: #FFECEC; color: #8B0000; padding:5px; border-radius:5px;}
+.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([2, 1])
+col1, col2 = st.columns([3, 1])  # proporção do título e imagem
 
 with col1:
     st.markdown(
@@ -100,14 +87,14 @@ with col1:
     )
 
 with col2:
-    st.image("cecia.png", width=120)
+    st.image("cecia.png", width=120)  # imagem do boneco à direita
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
 # Seleção de disciplina
 # =========================
-st.subheader("1️⃣ Selecione a Disciplina")
+st.markdown("<h3 style='color:#8B0000;'>1️⃣ Selecione a Disciplina</h3>", unsafe_allow_html=True)
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
@@ -130,7 +117,7 @@ ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 # =========================
 # Campos do plano
 # =========================
-st.subheader("2️⃣ Preencha os campos do plano")
+st.markdown("<h3 style='color:#8B0000;'>2️⃣ Preencha os campos do plano</h3>", unsafe_allow_html=True)
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
 coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
@@ -196,7 +183,7 @@ def gerar_odt():
 # =========================
 # Botão gerar ODT
 # =========================
-st.subheader("3️⃣ Gerar ODT")
+st.markdown("<h3 style='color:#8B0000;'>3️⃣ Gerar ODT</h3>", unsafe_allow_html=True)
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
