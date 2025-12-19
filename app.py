@@ -21,13 +21,16 @@ texto_conteudo_programatico = """1 Nivelamento
 1.1 Revisão de Algoritmos e Estruturas de Dados I, utilizando C/C++
 1.2 Ponteiros
 1.3 Vetores, Matrizes e Structs
+
 2 Somatórios
 2.1 Notação e manipulação de somas
 2.2 Exemplos computacionais
+
 3 Introdução
 3.1 Noções de complexidade, contagem de operações
 3.2 Pesquisa sequencial, binária e interpolada
 3.3 Algoritmo de ordenação por seleção
+
 4 Tempo de execução de programas
 4.1 Definições
 4.2 Complexidade de tempo x complexidade de espaço
@@ -35,6 +38,7 @@ texto_conteudo_programatico = """1 Nivelamento
 4.4 Comportamento assintótico de um programa
 4.5 Classes de comportamento assintótico
 4.6 Técnicas de análise de algoritmos
+
 5 Ordenação em memória principal
 5.1 Método da bolha
 5.2 Inserção
@@ -42,6 +46,7 @@ texto_conteudo_programatico = """1 Nivelamento
 5.4 Quicksort
 5.6 Mergesort
 5.7 Comparação entre os Métodos
+
 6 Tipos abstratos de dados
 6.1 Listas
 6.2 Pilhas
@@ -64,38 +69,64 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS simples
+# CSS atualizado
 # =========================
 st.markdown("""
 <style>
-.main > div.block-container { max-width: 90% !important; }
-.stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; padding:10px; border-radius:5px;}
-.stTextInput>div>input {background-color: #FFECEC; color: #8B0000; padding:5px; border-radius:5px;}
-.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
+.main > div.block-container { max-width: 90% !important; margin:auto;}
+.header-bar {
+    background-color: #FFECEC;  
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.header-bar h2 {
+    color: #8B0000;
+    margin: 0;
+    font-size: 22px;
+    text-align: center;
+}
+.section-number {
+    font-weight: bold; 
+    color: #8B0000; 
+    font-size: 24px;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    border: 2px solid #8B0000;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.stTextArea>div>div>textarea, .stTextInput>div>input {
+    background-color: white;  /* fundo branco */
+    color: #8B0000;           /* texto vermelho UFSJ */
+    padding: 12px; 
+    border-radius: 8px;
+    font-size: 15px;
+    border: 1px solid #8B0000; /* borda vermelha opcional */
+}
+.stButton>button {
+    background-color: #8B0000; 
+    color: white; 
+    padding: 0.6em 1.5em; 
+    border-radius: 12px; 
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.stButton>button:hover {
+    background-color: #a30000;
+    transform: scale(1.05);
+}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# Função para criar número em círculo vermelho UFSJ
-# =========================
-def numero_circulo(num):
-    return f"""
-    <span style="
-        display: inline-block;
-        width: 2em;
-        height: 2em;
-        line-height: 2em;
-        border-radius: 50%;
-        background-color: #8B0000; /* vermelho UFSJ */
-        color: white;
-        text-align: center;
-        font-weight: bold;
-        margin-right: 0.3em;
-    ">{num}</span>
-    """
-
-# =========================
-# Cabeçalho com título + imagem à direita
+# Cabeçalho com título + imagem
 # =========================
 col1, col2 = st.columns([2, 1])  # 2 partes texto, 1 parte imagem
 
@@ -192,7 +223,7 @@ def gerar_odt():
     with open(caminho_xml, "w", encoding="utf-8") as f:
         f.write(xml)
 
-    novo_odt = "documento_preenchido.odt"
+    novo_odt = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ','_')}.odt"
     with zipfile.ZipFile(novo_odt, 'w', zipfile.ZIP_DEFLATED) as zip_out:
         for folder, _, files_ in os.walk(pasta):
             for file in files_:
