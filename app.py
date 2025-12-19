@@ -7,7 +7,7 @@ from datetime import datetime
 import requests
 
 # =========================
-# Textos padrão
+# Textos padrão completos
 # =========================
 texto_metodologia_padrao = """• Aulas expositivas com apresentação de conteúdo, discussão de problemas e aplicações;
 • Aprendizagem por meio de solução de problemas;
@@ -64,61 +64,60 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS Vermelho UFSJ
+# CSS para caixas e botões
 # =========================
 st.markdown("""
 <style>
-/* Texto em vermelho UFSJ */
-h2, .stText, .stMarkdown p { color: #8B0000; }
-
-/* Caixas de input/textarea em tons suaves de vermelho UFSJ */
-.stTextArea>div>div>textarea {
-    background-color: #FFD6D6;
-    color: #8B0000;
-    padding:10px;
-    border-radius:5px;
-}
-.stTextInput>div>input {
-    background-color: #FFD6D6;
-    color: #8B0000;
-    padding:5px;
-    border-radius:5px;
-}
-
-/* Botões em vermelho UFSJ */
-.stButton>button {
-    background-color: #8B0000;
-    color: white;
-    padding:0.5em 1.2em;
-    border-radius:8px;
-    font-weight:bold;
-}
-
-/* Container máximo 60% da tela */
-.main > div.block-container { max-width: 60% !important; }
+.main > div.block-container { max-width: 90% !important; }
+.stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; padding:10px; border-radius:5px;}
+.stTextInput>div>input {background-color: #FFECEC; color: #8B0000; padding:5px; border-radius:5px;}
+.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([4, 1])
-
+col1, col2 = st.columns([2, 1])
 with col1:
     st.markdown(
-        "<h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
+        "<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
         unsafe_allow_html=True
     )
-
 with col2:
     st.image("cecia.png", width=120)
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
-# Seleção de disciplina
+# Função para títulos numerados estilo círculo
 # =========================
-st.subheader("1️⃣ Selecione a Disciplina")
+def titulo_circulo(numero, texto):
+    st.markdown(f"""
+    <div style="display:flex; align-items:center; margin-top:10px; margin-bottom:5px;">
+      <div style="
+          background-color:#8B0000; 
+          color:white; 
+          border-radius:50%; 
+          width:35px; 
+          height:35px; 
+          display:flex; 
+          justify-content:center; 
+          align-items:center; 
+          font-weight:bold;
+          font-size:18px;
+          margin-right:10px;
+          ">
+        {numero}
+      </div>
+      <div style="font-size:20px; color:#8B0000;">{texto}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# =========================
+# 1️⃣ Seleção de disciplina
+# =========================
+titulo_circulo("1", "Selecione a Disciplina")
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
@@ -139,9 +138,9 @@ semestre_sugerido = "2º" if mes_atual < 7 else "1º"
 ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 
 # =========================
-# Campos do plano
+# 2️⃣ Campos do plano
 # =========================
-st.subheader("2️⃣ Preencha os campos do plano")
+titulo_circulo("2", "Preencha os campos do plano")
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
 coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
@@ -195,7 +194,7 @@ def gerar_odt():
     with open(caminho_xml, "w", encoding="utf-8") as f:
         f.write(xml)
 
-    novo_odt = "documento_preenchido.odt"
+    novo_odt = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
     with zipfile.ZipFile(novo_odt, 'w', zipfile.ZIP_DEFLATED) as zip_out:
         for folder, _, files_ in os.walk(pasta):
             for file in files_:
@@ -205,18 +204,17 @@ def gerar_odt():
     return novo_odt
 
 # =========================
-# Botão gerar ODT
+# 3️⃣ Gerar ODT
 # =========================
-st.subheader("3️⃣ Gerar ODT")
+titulo_circulo("3", "Gerar ODT")
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
 
-    nome_saida = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
     with open(odt_gerado, "rb") as f:
         st.download_button(
             label="📥 Baixar ODT",
             data=f,
-            file_name=nome_saida,
+            file_name=odt_gerado,
             mime="application/vnd.oasis.opendocument.text"
         )
