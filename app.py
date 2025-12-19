@@ -78,7 +78,7 @@ st.markdown("""
 # =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([2, 1])  # 4 partes para texto, 1 parte para imagem
+col1, col2 = st.columns([1, 1])  # 4 partes para texto, 1 parte para imagem
 
 with col1:
     st.markdown(
@@ -196,6 +196,7 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
+
 
 
 
