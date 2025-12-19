@@ -111,7 +111,7 @@ odt_modelo = st.selectbox("Escolha o modelo ODT:", arquivos_odt)
 # =========================
 def transformar_em_paragrafos_justificados(texto):
     texto = saxutils.escape(texto)
-    return "</text:p><text:p text:style-name=\"Justificado\" fo:font-size=\"10pt\">".join(texto.split("\n"))
+    return "</text:p><text:p text:style-name=\"Justificado\" fo:font-size=\"9pt\">".join(texto.split("\n"))
 
 def gerar_odt_preenchido():
     git_url_raw = f"https://raw.githubusercontent.com/ceciaUFSJ/planos-ensino/main/modelos/{odt_modelo}"
@@ -177,4 +177,5 @@ if st.button("Gerar ODT/PDF"):
 
     if pdf_gerado and os.path.exists("documento_preenchido.pdf"):
         st.download_button("Baixar PDF", open("documento_preenchido.pdf", "rb").read(), file_name="documento_preenchido.pdf")
+
 
