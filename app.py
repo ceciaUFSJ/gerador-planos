@@ -76,11 +76,19 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# Cabeçalho
+# Cabeçalho com título + imagem à direita
 # =========================
-st.image("cecia.png", width=120)
-st.markdown("<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
-st.markdown("### 📝 Gerador de Plano de Ensino")
+col1, col2 = st.columns([4, 1])  # 4 partes para texto, 1 parte para imagem
+
+with col1:
+    st.markdown(
+        "<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
+        unsafe_allow_html=True
+    )
+
+with col2:
+    st.image("cecia.png", width=120)  # imagem do boneco à direita
+
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
@@ -188,3 +196,4 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
+
