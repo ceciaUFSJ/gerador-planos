@@ -76,9 +76,28 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
+# Função para criar número em círculo vermelho UFSJ
+# =========================
+def numero_circulo(num):
+    return f"""
+    <span style="
+        display: inline-block;
+        width: 2em;
+        height: 2em;
+        line-height: 2em;
+        border-radius: 50%;
+        background-color: #8B0000; /* vermelho UFSJ */
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        margin-right: 0.3em;
+    ">{num}</span>
+    """
+
+# =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([3, 1])  # proporção do título e imagem
+col1, col2 = st.columns([2, 1])  # 2 partes texto, 1 parte imagem
 
 with col1:
     st.markdown(
@@ -87,14 +106,15 @@ with col1:
     )
 
 with col2:
-    st.image("cecia.png", width=120)  # imagem do boneco à direita
+    st.image("cecia.png", width=120)  # imagem à direita
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
-# Seleção de disciplina
+# Seção 1️⃣ - Seleção de disciplina
 # =========================
-st.markdown("<h3 style='color:#8B0000;'>1️⃣ Selecione a Disciplina</h3>", unsafe_allow_html=True)
+st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
+
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
@@ -115,9 +135,10 @@ semestre_sugerido = "2º" if mes_atual < 7 else "1º"
 ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 
 # =========================
-# Campos do plano
+# Seção 2️⃣ - Campos do plano
 # =========================
-st.markdown("<h3 style='color:#8B0000;'>2️⃣ Preencha os campos do plano</h3>", unsafe_allow_html=True)
+st.markdown(f"{numero_circulo(2)} **Preencha os campos do plano**", unsafe_allow_html=True)
+
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
 coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
@@ -181,9 +202,10 @@ def gerar_odt():
     return novo_odt
 
 # =========================
-# Botão gerar ODT
+# Seção 3️⃣ - Gerar ODT
 # =========================
-st.markdown("<h3 style='color:#8B0000;'>3️⃣ Gerar ODT</h3>", unsafe_allow_html=True)
+st.markdown(f"{numero_circulo(3)} **Gerar ODT**", unsafe_allow_html=True)
+
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
