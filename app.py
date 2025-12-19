@@ -64,32 +64,57 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS
+# CSS moderno
 # =========================
 st.markdown("""
 <style>
-.main > div.block-container { max-width: 60% !important; }
-.stTextArea>div>div>textarea, .stTextInput>div>input {background-color: #FFECEC; color: #8B0000; padding:10px; border-radius:5px;}
-.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
+.main > div.block-container { max-width: 60% !important; margin:auto;}
 .header-bar {
-    background-color: #FFECEC;  /* tom suave vermelho */
+    background-color: #FFECEC;  
     padding: 15px 20px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 .header-bar h2 {
-    color: #8B0000;  /* vermelho UFSJ */
+    color: #8B0000;
     margin: 0;
+    font-size: 22px;
     text-align: center;
 }
 .section-number {
     font-weight:bold; 
     color:#8B0000; 
-    font-size:20px;
-    margin-right:5px;
+    font-size:24px;
+    display:inline-block;
+    width:35px;
+    height:35px;
+    text-align:center;
+    border:2px solid #8B0000;
+    border-radius:50%;
+    margin-right:8px;
+}
+.stTextArea>div>div>textarea, .stTextInput>div>input {
+    background-color: #FFECEC; 
+    color: #8B0000; 
+    padding:12px; 
+    border-radius:8px;
+    font-size:15px;
+}
+.stButton>button {
+    background-color: #8B0000; 
+    color: white; 
+    padding:0.6em 1.5em; 
+    border-radius:12px; 
+    font-weight:bold;
+    transition: all 0.3s ease;
+}
+.stButton>button:hover {
+    background-color:#a30000;
+    transform: scale(1.05);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -103,7 +128,7 @@ with col1:
 with col2:
     st.image("cecia.png", width=120)
 
-st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
+st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar. 🎨")
 
 # =========================
 # Seleção de disciplina
