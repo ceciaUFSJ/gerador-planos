@@ -4,7 +4,7 @@ import shutil
 import os
 import xml.sax.saxutils as saxutils
 from datetime import datetime
-import subprocess
+import requests
 
 # =========================
 # Função para criar número em círculo vermelho UFSJ
@@ -109,17 +109,25 @@ with col2:
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
-# Função para atualizar repositório e listar arquivos .odt
-def atualizar_modelos():
-    repo_path = "repo_temp"
-    if os.path.exists(repo_path):
-        subprocess.run(["git", "-C", repo_path, "pull"], check=True)
-    else:
-        subprocess.run(["git", "clone", "--depth=1", "https://github.com/ceciaUFSJ/planos-ensino.git", repo_path], check=True)
+# Função para baixar arquivos .odt direto do GitHub
+def baixar_modelos_direto():
+    url_api = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
+    r = requests.get(url_api)
+    arquivos = r.json()
     
-    modelos_path = os.path.join(repo_path, "modelos")
-    arquivos_odt = [f for f in os.listdir(modelos_path) if f.lower().endswith(".odt")]
-    return arquivos_odt
+    odt_files = []
+    os.makedirs("repo_temp/modelos", exist_ok=True)
+    
+    for f in arquivos:
+        if f['name'].lower().endswith(".odt"):
+            raw_url = f['download_url']
+            r2 = requests.get(raw_url)
+            caminho = os.path.join("repo_temp/modelos", f['name'])
+            with open(caminho, "wb") as out:
+                out.write(r2.content)
+            odt_files.append(f['name'])
+    
+    return odt_files
 
 # =========================
 # Seção 1️⃣ - Seleção de disciplina
@@ -127,12 +135,12 @@ st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html
 
 # Botão para atualizar lista
 if st.button("🔄 Atualizar lista de disciplinas"):
-    st.session_state['disciplinas'] = atualizar_modelos()
+    st.session_state['disciplinas'] = baixar_modelos_direto()
     st.success("✅ Lista de disciplinas atualizada!")
 
 # Inicializa lista na sessão
 if 'disciplinas' not in st.session_state:
-    st.session_state['disciplinas'] = atualizar_modelos()
+    st.session_state['disciplinas'] = baixar_modelos_direto()
 
 disciplina_selecionada = st.selectbox("Disciplina:", st.session_state['disciplinas'])
 
