@@ -65,6 +65,14 @@ st.set_page_config(page_title="CECIA - Gerador de Planos de Ensino", layout="wid
 
 st.markdown("""
 <style>
+/* Centralizar conteúdo e limitar largura a 60% */
+.main > div.block-container {
+    max-width: 60% !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Cores e fontes */
 body, .stApp {background-color: #FFFFFF; color: #8B0000; font-family: 'Arial', sans-serif;}
 h1, h2, h3, h4, h5, h6 {color: #8B0000; text-align:center;}
 .stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; border-radius:10px; padding:10px;}
@@ -79,7 +87,7 @@ h1, h2, h3, h4, h5, h6 {color: #8B0000; text-align:center;}
 # =========================
 # Cabeçalho com imagem
 # =========================
-col1, col2 = st.columns([3,1])  # 3/4 da largura para texto, 1/4 para imagem
+col1, col2 = st.columns([3,1])  # 60% para texto, 40% para imagem
 
 with col1:
     st.markdown("<h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
