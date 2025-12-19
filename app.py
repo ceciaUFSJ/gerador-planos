@@ -1,17 +1,19 @@
+# =========================
+# app.py - Gerador de Planos de Ensino (Somente ODT)
+# =========================
+
 import streamlit as st
-import requests
-import os
 import zipfile
 import shutil
+import os
 import xml.sax.saxutils as saxutils
-import subprocess
 from datetime import datetime
-
-st.title("Gerador de Plano de Ensino")
+import requests
 
 # =========================
-# Textos padrões
+# 1) Textos padrões
 # =========================
+
 texto_metodologia_padrao = """• Aulas expositivas com apresentação de conteúdo, discussão de problemas e aplicações;
 • Aprendizagem por meio de solução de problemas;
 • Desenvolvimento de algoritmos de forma dinâmica durante as aulas;
@@ -67,19 +69,45 @@ c) Trabalho Prático – 30 pontos.
 """
 
 # =========================
-# Buscar modelos ODT do GitHub
+# 2) Título da página e CSS
 # =========================
+st.set_page_config(page_title="Gerador de Plano de Ensino")
+st.markdown(
+    """
+    <style>
+    .main {
+        background-color: #B22222;  /* vermelho tijolo */
+        color: white;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+st.title("📝 Gerador de Plano de Ensino")
+
+# =========================
+# 3) Mensagem de aviso
+# =========================
+st.warning("⚠️ Os textos mostrados abaixo são **exemplos**. Substitua pelo conteúdo que desejar.")
+
+# =========================
+# 4) Seleção de disciplina (modelo ODT)
+# =========================
+st.subheader("1️⃣ Selecione a Disciplina")
+
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
-arquivos_odt = [f['name'] for f in arquivos_json if f['name'].lower().endswith('.odt')]
 
-if not arquivos_odt:
-    st.error("❌ Nenhum arquivo ODT encontrado no repositório.")
-    st.stop()
+disciplinas = [f['name'] for f in arquivos_json if f['name'].lower().endswith('.odt')]
+
+if not disciplinas:
+    st.error("❌ Nenhum modelo de disciplina (ODT) encontrado no repositório.")
+else:
+    disciplina_selecionada = st.selectbox("Disciplina:", disciplinas)
 
 # =========================
-# Cálculo automático de ano e semestre
+# 5) Cálculo automático de ANO e SEMESTRE
 # =========================
 hoje = datetime.now()
 ano_atual = hoje.year
@@ -93,28 +121,28 @@ else:
     ano_sugerido = ano_atual + 1
 
 # =========================
-# Campos de entrada
+# 6) Campos do plano
 # =========================
-docente = st.text_input("DOCENTE RESPONSÁVEL:", "João A. B. Cardoso")
-coordenador = st.text_input("COORDENADOR DO CURSO:", "Pedro")
-ano_oferta = st.text_input("ANO DE OFERECIMENTO:", str(ano_sugerido))
-semestre_oferta = st.text_input("SEMESTRE DE OFERECIMENTO:", semestre_sugerido)
+st.subheader("2️⃣ Preencha os campos do plano")
 
-conteudo_programatico = st.text_area("CONTEÚDO PROGRAMÁTICO:", texto_conteudo_programatico, height=330)
-metodologia = st.text_area("METODOLOGIA DE ENSINO:", texto_metodologia_padrao, height=240)
-controle_avaliacao = st.text_area("CONTROLE DE FREQUÊNCIA E AVALIAÇÃO:", texto_controle_avaliacao, height=260)
+docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
+coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
+ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
+semestre_oferecimento  = st.text_input("Semestre de Oferecimento:", semestre_sugerido)
 
-odt_modelo = st.selectbox("Escolha o modelo ODT:", arquivos_odt)
+conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=330)
+metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, height=240)
+controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=260)
 
 # =========================
-# Funções auxiliares
+# 7) Funções auxiliares
 # =========================
 def transformar_em_paragrafos_justificados(texto):
     texto = saxutils.escape(texto)
-    return "</text:p><text:p text:style-name=\"Justificado\" fo:font-size=\"9pt\">".join(texto.split("\n"))
+    return "</text:p><text:p text:style-name=\"Justificado\">".join(texto.split("\n"))
 
-def gerar_odt_preenchido():
-    git_url_raw = f"https://raw.githubusercontent.com/ceciaUFSJ/planos-ensino/main/modelos/{odt_modelo}"
+def gerar_odt():
+    git_url_raw = f"https://raw.githubusercontent.com/ceciaUFSJ/planos-ensino/main/modelos/{disciplina_selecionada}"
     r = requests.get(git_url_raw)
     with open("PLANO_BASE.odt", "wb") as f:
         f.write(r.content)
@@ -134,15 +162,16 @@ def gerar_odt_preenchido():
     if "style:name=\"Justificado\"" not in xml:
         estilo = """
         <style:style style:name="Justificado" style:family="paragraph">
-            <style:paragraph-properties fo:text-align="justify" fo:font-size="9pt"/>
+            <style:paragraph-properties fo:text-align="justify"/>
+            <style:text-properties fo:font-size="10pt"/>
         </style:style>
         """
         xml = xml.replace("</office:automatic-styles>", estilo + "\n</office:automatic-styles>")
 
     xml = xml.replace("drrrr", saxutils.escape(docente))
     xml = xml.replace("dcccc", saxutils.escape(coordenador))
-    xml = xml.replace("ANOof", saxutils.escape(ano_oferta))
-    xml = xml.replace("SEof", saxutils.escape(semestre_oferta))
+    xml = xml.replace("ANOof", saxutils.escape(ano_oferecimento))
+    xml = xml.replace("SEof", saxutils.escape(semestre_oferecimento))
     xml = xml.replace("cccc", transformar_em_paragrafos_justificados(conteudo_programatico))
     xml = xml.replace("mmmm", transformar_em_paragrafos_justificados(metodologia))
     xml = xml.replace("ffff", transformar_em_paragrafos_justificados(controle_avaliacao))
@@ -160,23 +189,17 @@ def gerar_odt_preenchido():
     return novo_odt
 
 # =========================
-# Botão de gerar ODT/PDF
+# 8) Botão de geração
 # =========================
-if st.button("Gerar ODT/PDF"):
-    odt_gerado = gerar_odt_preenchido()
+st.subheader("3️⃣ Gerar ODT")
 
-    pdf_gerado = False
-    try:
-        subprocess.run(["libreoffice", "--headless", "--convert-to", "pdf", odt_gerado], check=True)
-        pdf_gerado = True
-    except:
-        st.warning("⚠ PDF não pôde ser gerado. Baixe o ODT e converta localmente se necessário.")
-
-    st.success("✅ Arquivo ODT gerado com sucesso!")
-    st.download_button("Baixar ODT", open(odt_gerado, "rb").read(), file_name=odt_gerado)
-
-    if pdf_gerado and os.path.exists("documento_preenchido.pdf"):
-        st.download_button("Baixar PDF", open("documento_preenchido.pdf", "rb").read(), file_name="documento_preenchido.pdf")
-
-
-
+if st.button("Gerar ODT"):
+    odt_gerado = gerar_odt()
+    st.success("✅ ODT gerado com sucesso!")
+    with open(odt_gerado, "rb") as f:
+        st.download_button(
+            label="📥 Baixar ODT",
+            data=f,
+            file_name=odt_gerado,
+            mime="application/vnd.oasis.opendocument.text"
+        )
