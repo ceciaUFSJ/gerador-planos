@@ -143,16 +143,14 @@ st.markdown("""
 
 # =========================
 # Cabeçalho com título + imagem
-col1, col2 = st.columns([2, 1])  # 2 partes texto, 1 parte imagem
-
+col1, col2 = st.columns([2, 1])
 with col1:
     st.markdown(
         "<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
         unsafe_allow_html=True
     )
-
 with col2:
-    st.image("cecia.png", width=120)  # imagem à direita
+    st.image("cecia.png", width=120)
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
@@ -160,10 +158,9 @@ st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que des
 # Seção 1️⃣ - Seleção de disciplina
 st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
 
-# Adicionando um timestamp para evitar cache
-timestamp = int(time.time())
-api_url = f"https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos?ts={timestamp}"
-r = requests.get(api_url)
+# Adicionando cache-control para evitar cache do GitHub
+api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
+r = requests.get(api_url, headers={"Cache-Control": "no-cache"})
 arquivos_json = r.json()
 disciplinas = [f['name'] for f in arquivos_json if f['name'].lower().endswith('.odt')]
 
@@ -200,7 +197,12 @@ def transformar_em_paragrafos_justificados(texto):
 
 def gerar_odt():
     git_url_raw = f"https://raw.githubusercontent.com/ceciaUFSJ/planos-ensino/main/modelos/{disciplina_selecionada}"
-    r = requests.get(git_url_raw)
+    r = requests.get(git_url_raw, headers={"Cache-Control": "no-cache"})
+
+    # remover arquivo antigo
+    if os.path.exists("PLANO_BASE.odt"):
+        os.remove("PLANO_BASE.odt")
+
     with open("PLANO_BASE.odt", "wb") as f:
         f.write(r.content)
 
