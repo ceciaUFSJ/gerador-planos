@@ -7,6 +7,24 @@ from datetime import datetime
 import requests
 
 # =========================
+# Função para criar número em círculo vermelho UFSJ
+def numero_circulo(num):
+    return f"""
+    <span style="
+        display: inline-block;
+        width: 2em;
+        height: 2em;
+        line-height: 2em;
+        border-radius: 50%;
+        background-color: #8B0000; /* vermelho UFSJ */
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        margin-right: 0.3em;
+    ">{num}</span>
+    """
+
+# =========================
 # Textos padrão completos
 # =========================
 texto_metodologia_padrao = """• Aulas expositivas com apresentação de conteúdo, discussão de problemas e aplicações;
