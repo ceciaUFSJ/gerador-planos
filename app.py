@@ -131,10 +131,10 @@ ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 # Campos do plano
 # =========================
 st.subheader("2️⃣ Preencha os campos do plano")
-docente = st.text_area("Docente Responsável:", "João A. B. Cardoso", height=15)
-coordenador = st.text_area("Coordenador do Curso:", "Mario C. D. Silva", height=15)
-ano_oferecimento = st.text_area("Ano de Oferecimento:", str(ano_sugerido), height=15)
-semestre_oferecimento = st.text_area("Semestre de Oferecimento:", semestre_sugerido, height=15)
+docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
+coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
+ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
+semestre_oferecimento = st.text_input("Semestre de Oferecimento:", semestre_sugerido)
 conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=300)
 metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, height=220)
 controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=250)
@@ -209,6 +209,3 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
-
-
-
