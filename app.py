@@ -143,7 +143,7 @@ docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
 coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
 semestre_oferecimento = st.text_input("Semestre de Oferecimento:", semestre_sugerido)
-conteudo_programatico = st.text_input("Conteúdo Programático:", texto_conteudo_programatico, height=300)
+conteudo_programatico = st.text_area("Conteúdo Programático:", texto_conteudo_programatico, height=300)
 metodologia = st.text_area("Metodologia de Ensino:", texto_metodologia_padrao, height=220)
 controle_avaliacao = st.text_area("Controle de Frequência e Avaliação:", texto_controle_avaliacao, height=250)
 
@@ -218,4 +218,5 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
+
 
