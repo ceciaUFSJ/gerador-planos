@@ -21,16 +21,13 @@ texto_conteudo_programatico = """1 Nivelamento
 1.1 Revisão de Algoritmos e Estruturas de Dados I, utilizando C/C++
 1.2 Ponteiros
 1.3 Vetores, Matrizes e Structs
-
 2 Somatórios
 2.1 Notação e manipulação de somas
 2.2 Exemplos computacionais
-
 3 Introdução
 3.1 Noções de complexidade, contagem de operações
 3.2 Pesquisa sequencial, binária e interpolada
 3.3 Algoritmo de ordenação por seleção
-
 4 Tempo de execução de programas
 4.1 Definições
 4.2 Complexidade de tempo x complexidade de espaço
@@ -38,7 +35,6 @@ texto_conteudo_programatico = """1 Nivelamento
 4.4 Comportamento assintótico de um programa
 4.5 Classes de comportamento assintótico
 4.6 Técnicas de análise de algoritmos
-
 5 Ordenação em memória principal
 5.1 Método da bolha
 5.2 Inserção
@@ -46,7 +42,6 @@ texto_conteudo_programatico = """1 Nivelamento
 5.4 Quicksort
 5.6 Mergesort
 5.7 Comparação entre os Métodos
-
 6 Tipos abstratos de dados
 6.1 Listas
 6.2 Pilhas
@@ -69,57 +64,32 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS atualizado
+# CSS
 # =========================
 st.markdown("""
 <style>
-.main > div.block-container { max-width: 60% !important; margin:auto;}
+.main > div.block-container { max-width: 60% !important; }
+.stTextArea>div>div>textarea, .stTextInput>div>input {background-color: #FFECEC; color: #8B0000; padding:10px; border-radius:5px;}
+.stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
 .header-bar {
-    background-color: #FFECEC;  
+    background-color: #FFECEC;  /* tom suave vermelho */
     padding: 15px 20px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 .header-bar h2 {
-    color: #8B0000;
+    color: #8B0000;  /* vermelho UFSJ */
     margin: 0;
-    font-size: 22px;
     text-align: center;
 }
 .section-number {
-    font-weight: bold; 
-    color: #8B0000; 
-    font-size: 24px;
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    text-align: center;
-    border: 2px solid #8B0000;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-.stTextArea>div>div>textarea, .stTextInput>div>input {
-    background-color: white; 
-    color: #8B0000; 
-    padding: 12px; 
-    border-radius: 8px;
-    font-size: 15px;
-}
-.stButton>button {
-    background-color: #8B0000; 
-    color: white; 
-    padding: 0.6em 1.5em; 
-    border-radius: 12px; 
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-.stButton>button:hover {
-    background-color: #a30000;
-    transform: scale(1.05);
+    font-weight:bold; 
+    color:#8B0000; 
+    font-size:20px;
+    margin-right:5px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -133,12 +103,12 @@ with col1:
 with col2:
     st.image("cecia.png", width=120)
 
-st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar. 🎨")
+st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
 # Seleção de disciplina
 # =========================
-st.markdown("<div><span class='section-number'>1️⃣</span> Selecione a Disciplina</div>", unsafe_allow_html=True)
+st.markdown("<span class='section-number'>1️⃣</span> Selecione a Disciplina", unsafe_allow_html=True)
 api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
 r = requests.get(api_url)
 arquivos_json = r.json()
@@ -157,7 +127,7 @@ ano_sugerido = ano_atual if mes_atual < 7 else ano_atual + 1
 # =========================
 # Campos do plano
 # =========================
-st.markdown("<div><span class='section-number'>2️⃣</span> Preencha os campos do plano</div>", unsafe_allow_html=True)
+st.markdown("<span class='section-number'>2️⃣</span> Preencha os campos do plano", unsafe_allow_html=True)
 docente = st.text_input("Docente Responsável:", "João A. B. Cardoso")
 coordenador = st.text_input("Coordenador do Curso:", "Mario C. D. Silva")
 ano_oferecimento = st.text_input("Ano de Oferecimento:", str(ano_sugerido))
@@ -223,7 +193,7 @@ def gerar_odt():
 # =========================
 # Botão gerar ODT
 # =========================
-st.markdown("<div><span class='section-number'>3️⃣</span> Gerar ODT</div>", unsafe_allow_html=True)
+st.markdown("<span class='section-number'>3️⃣</span> Gerar ODT", unsafe_allow_html=True)
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
