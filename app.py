@@ -25,7 +25,7 @@ def numero_circulo(num):
     """
 
 # =========================
-# Textos padrão completos
+# Textos padrão
 texto_metodologia_padrao = """• Aulas expositivas com apresentação de conteúdo, discussão de problemas e aplicações;
 • Aprendizagem por meio de solução de problemas;
 • Desenvolvimento de algoritmos de forma dinâmica durante as aulas;
@@ -85,69 +85,24 @@ c) Trabalho Prático – 30 pontos.
 st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 
 # =========================
-# CSS atualizado
+# CSS
 st.markdown("""
 <style>
 .main > div.block-container { max-width: 90% !important; margin:auto;}
-.header-bar {
-    background-color: #FFECEC;  
-    padding: 15px 20px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.header-bar h2 {
-    color: #8B0000;
-    margin: 0;
-    font-size: 22px;
-    text-align: center;
-}
-.section-number {
-    font-weight: bold; 
-    color: #8B0000; 
-    font-size: 24px;
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    text-align: center;
-    border: 2px solid #8B0000;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-.stTextArea>div>div>textarea, .stTextInput>div>input {
-    background-color: white;  /* fundo branco */
-    color: #8B0000;           /* texto vermelho UFSJ */
-    padding: 12px; 
-    border-radius: 8px;
-    font-size: 15px;
-    border: 1px solid #8B0000; /* borda vermelha opcional */
-}
-.stButton>button {
-    background-color: #8B0000; 
-    color: white; 
-    padding: 0.6em 1.5em; 
-    border-radius: 12px; 
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-.stButton>button:hover {
-    background-color: #a30000;
-    transform: scale(1.05);
-}
+.header-bar { background-color: #FFECEC; padding: 15px 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
+.header-bar h2 { color: #8B0000; margin: 0; font-size: 22px; text-align: center;}
+.section-number { font-weight: bold; color: #8B0000; font-size: 24px; display: inline-block; width: 35px; height: 35px; text-align: center; border: 2px solid #8B0000; border-radius: 50%; margin-right: 8px;}
+.stTextArea>div>div>textarea, .stTextInput>div>input { background-color: white; color: #8B0000; padding: 12px; border-radius: 8px; font-size: 15px; border: 1px solid #8B0000; }
+.stButton>button { background-color: #8B0000; color: white; padding: 0.6em 1.5em; border-radius: 12px; font-weight: bold; transition: all 0.3s ease;}
+.stButton>button:hover { background-color: #a30000; transform: scale(1.05);}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# Cabeçalho com título + imagem
+# Cabeçalho
 col1, col2 = st.columns([2, 1])
 with col1:
-    st.markdown(
-        "<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>",
-        unsafe_allow_html=True
-    )
+    st.markdown("<h2 style='color:#8B0000;'>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
 with col2:
     st.image("cecia.png", width=120)
 
@@ -158,13 +113,15 @@ st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que des
 st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
 
 # =========================
-# Clonar repositório temporário para garantir arquivos atualizados
+# Atualizar ou clonar repositório
 if os.path.exists("repo_temp"):
-    shutil.rmtree("repo_temp")
+    # Atualiza o repositório existente
+    subprocess.run(["git", "-C", "repo_temp", "pull"], check=True)
+else:
+    # Clona pela primeira vez
+    subprocess.run(["git", "clone", "--depth=1", "https://github.com/ceciaUFSJ/planos-ensino.git", "repo_temp"], check=True)
 
-subprocess.run(["git", "clone", "--depth=1", "https://github.com/ceciaUFSJ/planos-ensino.git", "repo_temp"])
-
-# Lista arquivos .odt da pasta modelos
+# Lista arquivos .odt
 disciplinas = [f for f in os.listdir("repo_temp/modelos") if f.lower().endswith(".odt")]
 
 if not disciplinas:
@@ -199,10 +156,10 @@ def transformar_em_paragrafos_justificados(texto):
     return "</text:p><text:p text:style-name=\"Justificado\">".join(texto.split("\n"))
 
 def gerar_odt():
-    # Caminho do ODT base no clone temporário
+    # Caminho do ODT base no clone
     caminho_base = os.path.join("repo_temp", "modelos", disciplina_selecionada)
 
-    # Remover arquivo antigo
+    # Remove arquivo antigo
     if os.path.exists("PLANO_BASE.odt"):
         os.remove("PLANO_BASE.odt")
 
