@@ -5,7 +5,6 @@ import os
 import xml.sax.saxutils as saxutils
 from datetime import datetime
 import requests
-import time
 
 # =========================
 # Função para criar número em círculo vermelho UFSJ
@@ -158,11 +157,14 @@ st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que des
 # Seção 1️⃣ - Seleção de disciplina
 st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
 
-# Adicionando cache-control para evitar cache do GitHub
-api_url = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/contents/modelos"
-r = requests.get(api_url, headers={"Cache-Control": "no-cache"})
-arquivos_json = r.json()
-disciplinas = [f['name'] for f in arquivos_json if f['name'].lower().endswith('.odt')]
+# =========================
+# Buscar lista de disciplinas direto da árvore git (sem cache)
+url_tree = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/git/trees/main?recursive=1"
+r = requests.get(url_tree, headers={"Cache-Control": "no-cache"})
+tree = r.json().get("tree", [])
+
+disciplinas = [item['path'].split('/')[-1] for item in tree 
+               if item['path'].startswith("modelos/") and item['path'].lower().endswith(".odt")]
 
 if not disciplinas:
     st.error("❌ Nenhum modelo de disciplina (ODT) encontrado.")
@@ -196,16 +198,18 @@ def transformar_em_paragrafos_justificados(texto):
     return "</text:p><text:p text:style-name=\"Justificado\">".join(texto.split("\n"))
 
 def gerar_odt():
+    # Baixar arquivo ODT direto do raw da branch main
     git_url_raw = f"https://raw.githubusercontent.com/ceciaUFSJ/planos-ensino/main/modelos/{disciplina_selecionada}"
     r = requests.get(git_url_raw, headers={"Cache-Control": "no-cache"})
 
-    # remover arquivo antigo
+    # Remover arquivo antigo se existir
     if os.path.exists("PLANO_BASE.odt"):
         os.remove("PLANO_BASE.odt")
 
     with open("PLANO_BASE.odt", "wb") as f:
         f.write(r.content)
 
+    # Extrair ODT
     pasta = "odt_temp"
     if os.path.exists(pasta):
         shutil.rmtree(pasta)
@@ -214,6 +218,7 @@ def gerar_odt():
     with zipfile.ZipFile("PLANO_BASE.odt", 'r') as zip_ref:
         zip_ref.extractall(pasta)
 
+    # Alterar conteúdo
     caminho_xml = os.path.join(pasta, "content.xml")
     with open(caminho_xml, "r", encoding="utf-8") as f:
         xml = f.read()
@@ -238,6 +243,7 @@ def gerar_odt():
     with open(caminho_xml, "w", encoding="utf-8") as f:
         f.write(xml)
 
+    # Gerar novo ODT
     novo_odt = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ','_')}.odt"
     with zipfile.ZipFile(novo_odt, 'w', zipfile.ZIP_DEFLATED) as zip_out:
         for folder, _, files_ in os.walk(pasta):
