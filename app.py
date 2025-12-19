@@ -70,11 +70,11 @@ st.set_page_config(page_title="CECIA - Gerador de Planos de Ensino", layout="wid
 
 st.markdown("""
 <style>
-body, .stApp {background-color: #8B0000; color: #FFFFFF; font-family: 'Arial', sans-serif;}
-h1, h2, h3, h4, h5, h6 {color: #ADD8E6; text-align:center;}
-.stTextArea>div>div>textarea {background-color: #B22222; color: #FFFFFF; border-radius:10px; padding:10px;}
-.stTextInput>div>input {background-color: #B22222; color: #FFFFFF; border-radius:8px; padding:5px; border:none;}
-.stButton>button {background-color: #CD5C5C; color: white; border-radius:10px; padding: 0.5em 1.2em; font-weight:bold; transition: transform 0.2s; border:none;}
+body, .stApp {background-color: #FFFFFF; color: #8B0000; font-family: 'Arial', sans-serif;}
+h1, h2, h3, h4, h5, h6 {color: #8B0000; text-align:center;}
+.stTextArea>div>div>textarea {background-color: #FFECEC; color: #8B0000; border-radius:10px; padding:10px;}
+.stTextInput>div>input {background-color: #FFECEC; color: #8B0000; border-radius:8px; padding:5px; border:none;}
+.stButton>button {background-color: #8B0000; color: white; border-radius:10px; padding: 0.5em 1.2em; font-weight:bold; transition: transform 0.2s; border:none;}
 .stButton>button:hover {transform: scale(1.05); background-color: #B22222;}
 .stWarning {background-color:#FF6347; color:#FFFFFF; border-radius:8px; padding:10px;}
 .stContainer {padding: 1rem; border-radius:10px;}
