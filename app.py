@@ -74,12 +74,17 @@ st.set_page_config(page_title="CECIA - Gerador de Planos", layout="wide")
 st.markdown("""
 <style>
 .main > div.block-container { max-width: 90% !important; }
-.stTextArea>div>div>textarea {background-color: white; color: #8B0000; padding:10px; border-radius:5px;}
-.stTextInput>div>input {background-color: white; color: #8B0000; padding:5px; border-radius:5px;}
+.stTextArea>div>div>textarea, .stTextInput>div>input {
+    background-color: white; 
+    color: #8B0000; 
+    padding: 10px; 
+    border-radius: 5px;
+}
 .stButton>button {background-color: #8B0000; color: white; padding:0.5em 1.2em; border-radius:8px; font-weight:bold;}
 .numero_caixa {color:#8B0000; font-weight:bold; font-size:18px;}
 </style>
 """, unsafe_allow_html=True)
+True)
 
 
 # =========================
@@ -225,5 +230,6 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
+
 
 
