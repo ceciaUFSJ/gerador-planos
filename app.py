@@ -109,25 +109,32 @@ with col2:
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
 # =========================
+# Função para atualizar repositório e listar arquivos .odt
+def atualizar_modelos():
+    repo_path = "repo_temp"
+    if os.path.exists(repo_path):
+        subprocess.run(["git", "-C", repo_path, "pull"], check=True)
+    else:
+        subprocess.run(["git", "clone", "--depth=1", "https://github.com/ceciaUFSJ/planos-ensino.git", repo_path], check=True)
+    
+    modelos_path = os.path.join(repo_path, "modelos")
+    arquivos_odt = [f for f in os.listdir(modelos_path) if f.lower().endswith(".odt")]
+    return arquivos_odt
+
+# =========================
 # Seção 1️⃣ - Seleção de disciplina
 st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
 
-# =========================
-# Atualizar ou clonar repositório
-if os.path.exists("repo_temp"):
-    # Atualiza o repositório existente
-    subprocess.run(["git", "-C", "repo_temp", "pull"], check=True)
-else:
-    # Clona pela primeira vez
-    subprocess.run(["git", "clone", "--depth=1", "https://github.com/ceciaUFSJ/planos-ensino.git", "repo_temp"], check=True)
+# Botão para atualizar lista
+if st.button("🔄 Atualizar lista de disciplinas"):
+    st.session_state['disciplinas'] = atualizar_modelos()
+    st.success("✅ Lista de disciplinas atualizada!")
 
-# Lista arquivos .odt
-disciplinas = [f for f in os.listdir("repo_temp/modelos") if f.lower().endswith(".odt")]
+# Inicializa lista na sessão
+if 'disciplinas' not in st.session_state:
+    st.session_state['disciplinas'] = atualizar_modelos()
 
-if not disciplinas:
-    st.error("❌ Nenhum modelo de disciplina (ODT) encontrado.")
-else:
-    disciplina_selecionada = st.selectbox("Disciplina:", disciplinas)
+disciplina_selecionada = st.selectbox("Disciplina:", st.session_state['disciplinas'])
 
 # =========================
 # Ano e semestre
@@ -156,16 +163,11 @@ def transformar_em_paragrafos_justificados(texto):
     return "</text:p><text:p text:style-name=\"Justificado\">".join(texto.split("\n"))
 
 def gerar_odt():
-    # Caminho do ODT base no clone
     caminho_base = os.path.join("repo_temp", "modelos", disciplina_selecionada)
-
-    # Remove arquivo antigo
     if os.path.exists("PLANO_BASE.odt"):
         os.remove("PLANO_BASE.odt")
-
     shutil.copy(caminho_base, "PLANO_BASE.odt")
 
-    # Extrair ODT
     pasta = "odt_temp"
     if os.path.exists(pasta):
         shutil.rmtree(pasta)
@@ -174,7 +176,6 @@ def gerar_odt():
     with zipfile.ZipFile("PLANO_BASE.odt", 'r') as zip_ref:
         zip_ref.extractall(pasta)
 
-    # Alterar conteúdo
     caminho_xml = os.path.join(pasta, "content.xml")
     with open(caminho_xml, "r", encoding="utf-8") as f:
         xml = f.read()
@@ -199,7 +200,6 @@ def gerar_odt():
     with open(caminho_xml, "w", encoding="utf-8") as f:
         f.write(xml)
 
-    # Gerar novo ODT
     novo_odt = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ','_')}.odt"
     with zipfile.ZipFile(novo_odt, 'w', zipfile.ZIP_DEFLATED) as zip_out:
         for folder, _, files_ in os.walk(pasta):
@@ -216,7 +216,6 @@ st.markdown(f"{numero_circulo(3)} **Gerar ODT**", unsafe_allow_html=True)
 if st.button("Gerar ODT"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
-
     nome_saida = f"{os.path.splitext(disciplina_selecionada)[0]}_{docente.replace(' ', '_')}.odt"
     with open(odt_gerado, "rb") as f:
         st.download_button(
