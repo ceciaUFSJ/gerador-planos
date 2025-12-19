@@ -19,18 +19,15 @@ texto_metodologia_padrao = """• Aulas expositivas com apresentação de conte�
 
 texto_conteudo_programatico = """1 Nivelamento
 1.1 Revisão de Algoritmos e Estruturas de Dados I, utilizando C/C++
-1.2 Ponteiros: declaração, inicialização, alocação e desalocação
+1.2 Ponteiros
 1.3 Vetores, Matrizes e Structs
-
 2 Somatórios
 2.1 Notação e manipulação de somas
 2.2 Exemplos computacionais
-
 3 Introdução
 3.1 Noções de complexidade, contagem de operações
 3.2 Pesquisa sequencial, binária e interpolada
 3.3 Algoritmo de ordenação por seleção
-
 4 Tempo de execução de programas
 4.1 Definições
 4.2 Complexidade de tempo x complexidade de espaço
@@ -38,7 +35,6 @@ texto_conteudo_programatico = """1 Nivelamento
 4.4 Comportamento assintótico de um programa
 4.5 Classes de comportamento assintótico
 4.6 Técnicas de análise de algoritmos
-
 5 Ordenação em memória principal
 5.1 Método da bolha
 5.2 Inserção
@@ -46,7 +42,6 @@ texto_conteudo_programatico = """1 Nivelamento
 5.4 Quicksort
 5.6 Mergesort
 5.7 Comparação entre os Métodos
-
 6 Tipos abstratos de dados
 6.1 Listas
 6.2 Pilhas
@@ -82,11 +77,17 @@ h1, h2, h3, h4, h5, h6 {color: #8B0000; text-align:center;}
 """, unsafe_allow_html=True)
 
 # =========================
-# Cabeçalho
+# Cabeçalho com imagem
 # =========================
-st.markdown("<h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
-st.title("📝 Gerador de Plano de Ensino")
-st.warning("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos desejados.")
+col1, col2 = st.columns([3,1])  # 3/4 da largura para texto, 1/4 para imagem
+
+with col1:
+    st.markdown("<h2>CECIA - Coordenação do Curso de Engenharia da Computação com Inteligência Artificial</h2>", unsafe_allow_html=True)
+    st.title("📝 Gerador de Plano de Ensino")
+    st.warning("⚠️ Os textos abaixo são apenas exemplos. Substitua pelos conteúdos desejados.")
+
+with col2:
+    st.image("cecia.png", width=150)
 
 # =========================
 # Seleção de disciplina
