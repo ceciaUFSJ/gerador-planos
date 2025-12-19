@@ -21,13 +21,16 @@ texto_conteudo_programatico = """1 Nivelamento
 1.1 Revisão de Algoritmos e Estruturas de Dados I, utilizando C/C++
 1.2 Ponteiros
 1.3 Vetores, Matrizes e Structs
+
 2 Somatórios
 2.1 Notação e manipulação de somas
 2.2 Exemplos computacionais
+
 3 Introdução
 3.1 Noções de complexidade, contagem de operações
 3.2 Pesquisa sequencial, binária e interpolada
 3.3 Algoritmo de ordenação por seleção
+
 4 Tempo de execução de programas
 4.1 Definições
 4.2 Complexidade de tempo x complexidade de espaço
@@ -35,6 +38,7 @@ texto_conteudo_programatico = """1 Nivelamento
 4.4 Comportamento assintótico de um programa
 4.5 Classes de comportamento assintótico
 4.6 Técnicas de análise de algoritmos
+
 5 Ordenação em memória principal
 5.1 Método da bolha
 5.2 Inserção
@@ -42,6 +46,7 @@ texto_conteudo_programatico = """1 Nivelamento
 5.4 Quicksort
 5.6 Mergesort
 5.7 Comparação entre os Métodos
+
 6 Tipos abstratos de dados
 6.1 Listas
 6.2 Pilhas
@@ -83,7 +88,7 @@ st.markdown("""
 # =========================
 # Cabeçalho com título + imagem à direita
 # =========================
-col1, col2 = st.columns([3, 1])
+col1, col2 = st.columns([2, 1])
 
 with col1:
     st.markdown(
@@ -201,3 +206,4 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
+
