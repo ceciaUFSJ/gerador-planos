@@ -87,7 +87,7 @@ with col1:
     )
 
 with col2:
-    st.image("cecia.png", width=120)  # imagem do boneco à direita
+    st.image("cecia.png", width=20)  # imagem do boneco à direita
 
 st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que desejar.")
 
@@ -196,4 +196,5 @@ if st.button("Gerar ODT"):
             file_name=nome_saida,
             mime="application/vnd.oasis.opendocument.text"
         )
+
 
