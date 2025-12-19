@@ -4,7 +4,7 @@ import shutil
 import os
 import xml.sax.saxutils as saxutils
 from datetime import datetime
-import requests
+import subprocess
 
 # =========================
 # Função para criar número em círculo vermelho UFSJ
@@ -158,13 +158,14 @@ st.info("⚠️ Os textos abaixo são exemplos. Substitua pelo conteúdo que des
 st.markdown(f"{numero_circulo(1)} **Selecione a Disciplina**", unsafe_allow_html=True)
 
 # =========================
-# Buscar lista de disciplinas direto da árvore git (sem cache)
-url_tree = "https://api.github.com/repos/ceciaUFSJ/planos-ensino/git/trees/main?recursive=1"
-r = requests.get(url_tree, headers={"Cache-Control": "no-cache"})
-tree = r.json().get("tree", [])
+# Clonar repositório temporário para garantir arquivos atualizados
+if os.path.exists("repo_temp"):
+    shutil.rmtree("repo_temp")
 
-disciplinas = [item['path'].split('/')[-1] for item in tree 
-               if item['path'].startswith("modelos/") and item['path'].lower().endswith(".odt")]
+subprocess.run(["git", "clone", "--depth=1", "https://github.com/ceciaUFSJ/planos-ensino.git", "repo_temp"])
+
+# Lista arquivos .odt da pasta modelos
+disciplinas = [f for f in os.listdir("repo_temp/modelos") if f.lower().endswith(".odt")]
 
 if not disciplinas:
     st.error("❌ Nenhum modelo de disciplina (ODT) encontrado.")
@@ -198,16 +199,14 @@ def transformar_em_paragrafos_justificados(texto):
     return "</text:p><text:p text:style-name=\"Justificado\">".join(texto.split("\n"))
 
 def gerar_odt():
-    # Baixar arquivo ODT direto do raw da branch main
-    git_url_raw = f"https://raw.githubusercontent.com/ceciaUFSJ/planos-ensino/main/modelos/{disciplina_selecionada}"
-    r = requests.get(git_url_raw, headers={"Cache-Control": "no-cache"})
+    # Caminho do ODT base no clone temporário
+    caminho_base = os.path.join("repo_temp", "modelos", disciplina_selecionada)
 
-    # Remover arquivo antigo se existir
+    # Remover arquivo antigo
     if os.path.exists("PLANO_BASE.odt"):
         os.remove("PLANO_BASE.odt")
 
-    with open("PLANO_BASE.odt", "wb") as f:
-        f.write(r.content)
+    shutil.copy(caminho_base, "PLANO_BASE.odt")
 
     # Extrair ODT
     pasta = "odt_temp"
