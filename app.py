@@ -212,7 +212,7 @@ def gerar_odt():
 # =========================
 st.subheader("3️⃣ Gerar ODT ou Word")
 
-if st.button("Gerar ODT"):
+if st.button("Gerar Arquivo"):
     odt_gerado = gerar_odt()
     st.success("✅ ODT gerado com sucesso!")
     with open(odt_gerado, "rb") as f:
@@ -232,3 +232,4 @@ if st.button("Gerar ODT"):
             file_name=docx_gerado,
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
